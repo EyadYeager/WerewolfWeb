@@ -42,3 +42,17 @@ class LobbyJoinView(View):
         return redirect(f'/lobby/{id}/')
 
 
+class LobbyLeaveView(View):
+    def get(self, request, id):
+        user = request.user
+
+        try:
+            lobby = Lobby.objects.get(id=id)
+
+            if user not in lobby.players.all():
+                print("Player is not in the lobby")
+            else:
+                lobby.players.remove(user)
+        except Lobby.DoesNotExist:
+            redirect('/lobby/')
+        return redirect(f'/lobby/{id}/')
