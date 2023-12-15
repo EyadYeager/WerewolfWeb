@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lobby - {{ lobby.name }}</title>
+</head>
+<body>
+    <h1>Lobby: {{ lobby.name }}</h1>
+    <p>Max players: {{ lobby.max_players }} - status: {{ lobby.get_game_status_display }}</p>
+    <a href="/lobby/">All lobbies</a>
+<ol>
+{#{{ user }}#}
+    {% for p in lobby.players.all %}
+        <li>{{ p }}</li>
+    {% endfor %}
+</ol>
+<a href="/lobby/{{ lobby.id }}/join/">Join game!</a>
+</body>
+</html>

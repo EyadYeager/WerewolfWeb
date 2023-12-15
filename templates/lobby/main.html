@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        
+    </style>
+    <meta charset="UTF-8">
+    <title>Main - All lobbies</title>
+</head>
+<body>
+    <h1>Current lobbies</h1>
+<ol>
+    {% for l in lobbies %}
+        <li><a href="/lobby/{{ l.id }}/">{{ l.name }}</a></li>
+    {% endfor %}
+</ol>
+
+</body>
+</html>
