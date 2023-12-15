@@ -28,4 +28,5 @@ urlpatterns = [
     path('lobby/', MainLobbyView.as_view(), name='mainlobby'),
     path('lobby/<int:id>/join/', LobbyJoinView.as_view(), name='lobby'),
     path('lobby/<int:id>/leave/', LobbyLeaveView.as_view(), name='lobby')
+
 ]

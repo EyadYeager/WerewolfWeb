@@ -56,3 +56,4 @@ class LobbyLeaveView(View):
         except Lobby.DoesNotExist:
             redirect('/lobby/')
         return redirect(f'/lobby/{id}/')
+
