@@ -5,15 +5,16 @@
     <title>Lobby - {{ lobby.name }}</title>
 </head>
 <body>
-    <h1>Lobby: {{ lobby.name }}</h1>
-    <p>Max players: {{ lobby.max_players }} - status: {{ lobby.get_game_status_display }}</p>
-    <a href="/lobby/">All lobbies</a>
+<h1>Lobby: {{ lobby.name }}</h1>
+<p>Max players: {{ lobby.max_players }} - status: {{ lobby.get_game_status_display }}</p>
+<a href="/lobby/">All lobbies</a>
 <ol>
-{#{{ user }}#}
+    {#{{ user }}#}
     {% for p in lobby.players.all %}
         <li>{{ p }}</li>
     {% endfor %}
 </ol>
 <a href="/lobby/{{ lobby.id }}/join/">Join game!</a>
+<a href="/lobby/{{ lobby.id }}/leave/">leave game</a>
 </body>
 </html>
