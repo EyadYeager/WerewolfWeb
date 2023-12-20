@@ -12,6 +12,7 @@ class Lobby(models.Model):
     max_players = models.IntegerField(default=0)
     players = models.ManyToManyField(User, default=None, blank=True)
     game_status = models.IntegerField(choices=GAME_STATUS)
+    game_admin = models.ForeignKey(User, on_delete=models.CASCADE, related_name='game_admin')
 
     def __str__(self):
         return f'{self.name} - max: {self.max_players} - players: {self.players.count()}'
