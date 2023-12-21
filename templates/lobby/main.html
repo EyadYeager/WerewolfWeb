@@ -2,7 +2,13 @@
 <html lang="en">
 <head>
     <style>
-        
+        body{
+        font-size: 25px;
+
+        }
+        .fonts{
+            font-size: 25px;
+        }
     </style>
     <meta charset="UTF-8">
     <title>Main - All lobbies</title>
@@ -11,9 +17,10 @@
     <h1>Current lobbies</h1>
 <ol>
     {% for l in lobbies %}
-        <li><a href="/lobby/{{ l.id }}/">{{ l.name }}</a></li>
+        <li><a href="/lobby/{{ l.id }}/">{{ l.name }} </a> status: {{ l.get_game_status_display }}</li>
     {% endfor %}
 </ol>
 
+    <a class="fonts" href="/lobby/CreateLobby/"><button class="fonts">Create a lobby</button></a>
 </body>
 </html>

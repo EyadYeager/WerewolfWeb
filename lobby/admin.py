@@ -4,6 +4,7 @@ from django.contrib import admin
 
 from lobby.models import *
 
+
 class LobbyAdmin(admin.ModelAdmin):
     list_display = ["name", "max_players", "game_status", "no_of_players"]
 
@@ -12,4 +13,3 @@ class LobbyAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Lobby, LobbyAdmin)
-

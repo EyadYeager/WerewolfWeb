@@ -131,4 +131,9 @@ GAME_STATUS = (
     (2, 'Ended')
 )
 
+GAME_ROLES = (
+    (0, 'Werewolf'),
+    (1, 'Citizen'),
+    (2, 'Doctor')
+)
 LOGIN_REDIRECT_URL = '/'
