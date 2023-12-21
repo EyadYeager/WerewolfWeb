@@ -23,7 +23,6 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        print([a.name for a in Lobby._meta.get_fields()])
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
 
