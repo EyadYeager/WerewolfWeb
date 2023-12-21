@@ -5,6 +5,13 @@
     <title>CreateLobby</title>
 </head>
 <body>
-<label>{{ name }}</label>
+
+
+<form method="post" action="/lobby/CreateLobby/">
+        {% csrf_token %}    
+    <input type="text" name='name'>
+    <button type="submit" >Submit</button>
+    </form>
+<a>{{ error }}</a>
 </body>
 </html>
