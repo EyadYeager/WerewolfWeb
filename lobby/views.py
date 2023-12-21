@@ -61,6 +61,13 @@ class LobbyLeaveView(View):
 
 class LobbyCreateView(View):
     def get(self, request):
+        name = ""
+        return render(request, 'lobby/CreateLobby.html')
 
-        Newlobby = Lobby.objects.create(name='name', max_players=10, game_admin=request.user, game_status=0)
-        return render(request, 'lobby/CreateLobby.html', {'Newlobby': Newlobby})
+    def post(self, request):
+        name = request.POST.get('name', "Lobby with no name")
+
+        if len(name) < 3:
+            return render(request, 'lobby/CreateLobby.html', {"error": "Name should be longer than 2 characters"})
+        Newlobby = Lobby.objects.create(name=name, max_players=10, game_admin=request.user, game_status=0)
+        return redirect(f'/lobby/')
