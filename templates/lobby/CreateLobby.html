@@ -1,17 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        * {
+        font-size: 50px;
+        }
+        
+        .searchbar {
+            width: 100%;
+        }
+
+        .searchbutton {
+            align-self: center;
+            place-self: center;
+            width: 102.3%;
+        }
+
+        .box {
+            display: grid;
+            margin: 20px auto;
+            width: 100%;
+            max-width: 350px;
+            height: 40px;
+            text-align: center;
+            justify-content: center;
+            justify-items: center;
+        }
+    </style>
     <meta charset="UTF-8">
     <title>CreateLobby</title>
 </head>
 <body>
 
-
-<form method="post" action="/lobby/CreateLobby/">
-        {% csrf_token %}    
-    <input type="text" name='name'>
-    <button type="submit" >Submit</button>
+<div class="searchbar">
+    <div class="box">
+        <a> Enter a name for the lobby</a>
+        <form method="post" action="/lobby/CreateLobby/">
+            {% csrf_token %}
+            <input class="searchbar" type="text" name='name'>
+            <button class="searchbutton" type="submit">Submit</button>
     </form>
+    </div>
+</div>
+
 <a>{{ error }}</a>
 </body>
 </html>
