@@ -73,12 +73,16 @@ class LobbyCreateView(View):
 
 
 class GameStart(View):
-    def get(self, request):
-        return render(request, 'lobby/GameStart.html')
+    def get(self, request, id):
+        gamestatus = Lobby.objects.get(id=id)
+        gamestatus.game_status = 1
+        gamestatus.save()
 
+        return render(request, 'lobby/GameStart.html',{'gamestatus': gamestatus})
 
-class DeleteLobby(View):
-    def get(self, request):
-        LobbyDelete = GAME_STATUS(2)
-        if LobbyDelete:
-            LobbyDelete.delete()
+#
+# class DeleteLobby(View):
+#     def get(self, request):
+#         LobbyDelete = GAME_STATUS(2)
+#         if LobbyDelete:
+#             LobbyDelete.delete()
