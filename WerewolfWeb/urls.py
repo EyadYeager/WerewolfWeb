@@ -29,4 +29,5 @@ urlpatterns = [
     path('lobby/<int:id>/join/', LobbyJoinView.as_view(), name='lobby'),
     path('lobby/<int:id>/leave/', LobbyLeaveView.as_view(), name='lobby'),
     path('lobby/CreateLobby/', LobbyCreateView.as_view(), name='name'),
+    path('lobby/<int:id>/gamestart', GameStart.as_view(), name='start')
 ]

@@ -70,3 +70,15 @@ class LobbyCreateView(View):
             return render(request, 'lobby/CreateLobby.html', {"error": "Name should be longer than 2 characters"})
         Newlobby = Lobby.objects.create(name=name, max_players=10, game_admin=request.user, game_status=0)
         return redirect(f'/lobby/')
+
+
+class GameStart(View):
+    def get(self, request):
+        return render(request, 'lobby/GameStart.html')
+
+
+class DeleteLobby(View):
+    def get(self, request):
+        LobbyDelete = GAME_STATUS(2)
+        if LobbyDelete:
+            LobbyDelete.delete()
