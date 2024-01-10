@@ -16,6 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
 
 from lobby.views import *
 from main.views import MainView
@@ -30,4 +31,5 @@ urlpatterns = [
     path('lobby/<int:id>/leave/', LobbyLeaveView.as_view(), name='lobby'),
     path('lobby/CreateLobby/', LobbyCreateView.as_view(), name='name'),
     path('lobby/<int:id>/gamestart/', GameStart.as_view(), name='start'),
+    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
 ]

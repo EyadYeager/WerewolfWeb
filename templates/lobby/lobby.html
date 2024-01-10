@@ -2,10 +2,10 @@
 <html lang="en">
 <head>
     <style>
-        body{
+        body {
             font-size: 25px;
         }
-    </style>    
+    </style>
     <meta charset="UTF-8">
     <title>Lobby - {{ lobby.name }}</title>
 </head>
@@ -22,5 +22,11 @@
 <a href="/lobby/{{ lobby.id }}/join/">Join game!</a>
 <a href="/lobby/{{ lobby.id }}/leave/">leave game</a>
 <a href="/lobby/{{ lobby.id }}/gamestart/">Start game</a>
+
+{% if id == 0 %}
+    <div class="alert alert-error">
+        <strong>Imagine having less than 3 players</strong>
+    </div>
+{% endif %}
 </body>
 </html>

@@ -2,6 +2,11 @@
 <html lang="en">
 <head>
     <style>
+        
+        * {
+            font-family: Arial;
+        }
+        
         body{
         font-size: 25px;
 
@@ -9,17 +14,40 @@
         .fonts{
             font-size: 25px;
         }
+        
+        .button-logout {
+            
+        }
+        
+        .container {
+            display: flex;
+            justify-items: end;
+            place-content: end;
+            place-items: end;
+        }
+        
     </style>
     <meta charset="UTF-8">
     <title>Main - All lobbies</title>
 </head>
 <body>
+    {% if user.is_authenticated %}
+    <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <div class="container">
+                 <button class="button-logout" type="submit">Logout</button>   
+        </div>
+    </form>
+{% endif %}
+
+
     <h1>Current lobbies</h1>
 <ol>
     {% for l in lobbies %}
         <li><a href="/lobby/{{ l.id }}/">{{ l.name }} </a> status: {{ l.get_game_status_display }}</li>
     {% endfor %}
 </ol>
+    
 
     <a class="fonts" href="/lobby/CreateLobby/"><button class="fonts">Create a lobby</button></a>
 </body>

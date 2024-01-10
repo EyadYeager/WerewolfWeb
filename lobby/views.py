@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
@@ -74,11 +75,16 @@ class LobbyCreateView(View):
 
 class GameStart(View):
     def get(self, request, id):
-        gamestatus = Lobby.objects.get(id=id)
-        gamestatus.game_status = 1
-        gamestatus.save()
+        game = Lobby.objects.get(id=id)
+        player_count = game.players.count()
+        if player_count < 3:
+            return render(request, 'lobby/alert.html', {'id':id})
+        else:
+            gamestatus = Lobby.objects.get(id=id)
+            gamestatus.game_status = 1
+            gamestatus.save()
+            return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
 
-        return render(request, 'lobby/GameStart.html',{'gamestatus': gamestatus})
 
 #
 # class DeleteLobby(View):
