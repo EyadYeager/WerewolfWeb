@@ -24,6 +24,7 @@ from main.views import MainView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
+    path("signup/", SignUpView.as_view(), name="signup"),
     path('', MainView.as_view()),
     path('lobby/<int:id>/', LobbyView.as_view(), name='lobby'),
     path('lobby/', MainLobbyView.as_view(), name='mainlobby'),

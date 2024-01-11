@@ -6,10 +6,11 @@
 </head>
 <body>
 <h1>Werewolf</h1>
-{% if user.is_authenticated  %}
-  <a href="/lobby/">Go to the lobby</a>
-    {% else %}
-    <a href="/accounts/login/">Click here to login</a>
+{% if user.is_authenticated %}
+    <a href="/lobby/">Go to the lobby</a>
+{% else %}
+    <a href="/accounts/login/">Click here to login</a> <br>
+    <a href="/signup/">New here? <br> Sign up here</a>
 {% endif %}
 
 </body>
