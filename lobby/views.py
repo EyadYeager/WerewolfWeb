@@ -30,7 +30,7 @@ class MainLobbyView(View):
 class LobbyJoinView(View):
     def get(self, request, id):
         user = request.user
-
+        alert = 2
         try:
             lobby = Lobby.objects.get(id=id)
 
@@ -38,6 +38,7 @@ class LobbyJoinView(View):
                 lobby.players.add(user)
             else:
                 print("Already in game")
+                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
         except Lobby.DoesNotExist:
             redirect('/lobby/')
         return redirect(f'/lobby/{id}/')
@@ -46,12 +47,12 @@ class LobbyJoinView(View):
 class LobbyLeaveView(View):
     def get(self, request, id):
         user = request.user
-
+        alert = 3
         try:
             lobby = Lobby.objects.get(id=id)
 
             if user not in lobby.players.all():
-                print("Player is not in the lobby")
+                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
             else:
                 lobby.players.remove(user)
         except Lobby.DoesNotExist:
@@ -78,13 +79,13 @@ class GameStart(View):
         game = Lobby.objects.get(id=id)
         player_count = game.players.count()
         if player_count < 3:
-            return render(request, 'lobby/alert.html', {'id':id})
+            alert = 1
+            return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
         else:
             gamestatus = Lobby.objects.get(id=id)
             gamestatus.game_status = 1
             gamestatus.save()
             return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
-
 
 #
 # class DeleteLobby(View):

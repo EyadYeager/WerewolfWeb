@@ -7,7 +7,25 @@
 <body>
 
 <script>
-    alert('Not enough players')
+    
+    let alertMessage;
+    
+    switch ({{ alert }}) {
+        case 1:
+            alertMessage = 'Not enough players'
+            break
+        case 2:
+            alertMessage = 'Already in game'
+            break
+        case 3:
+            alertMessage = 'Not in game'
+            break
+        default:
+             alertMessage = 'Error'
+            break
+    }
+    
+    alert(alertMessage)
     window.location.href = "http://localhost:8000/lobby/{{ id }}";
 </script>
 </body>
