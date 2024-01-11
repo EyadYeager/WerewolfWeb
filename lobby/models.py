@@ -16,3 +16,8 @@ class Lobby(models.Model):
 
     def __str__(self):
         return f'{self.name} - max: {self.max_players} - players: {self.players.count()}'
+
+
+class Round(models.Model):
+    lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+    round = models.IntegerField(default=1)

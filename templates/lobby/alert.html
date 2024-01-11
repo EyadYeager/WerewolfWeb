@@ -9,7 +9,7 @@
 <script>
     
     let alertMessage;
-    
+
     switch ({{ alert }}) {
         case 1:
             alertMessage = 'Not enough players'
@@ -24,7 +24,7 @@
              alertMessage = 'Error'
             break
     }
-    
+
     alert(alertMessage)
     window.location.href = "http://localhost:8000/lobby/{{ id }}";
 </script>

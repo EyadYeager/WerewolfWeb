@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views import View
 
-from lobby.models import Lobby
+from lobby.models import Lobby, Round
 from WerewolfWeb.settings import GAME_STATUS
 
 
@@ -81,11 +81,24 @@ class GameStart(View):
         if player_count < 3:
             alert = 1
             return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
-        else:
-            gamestatus = Lobby.objects.get(id=id)
-            gamestatus.game_status = 1
-            gamestatus.save()
-            return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
+
+        gamestatus = Lobby.objects.get(id=id)
+        gamestatus.game_status = 1
+        gamestatus.save()
+        return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
+
+        round = Round.objects.create(lobby=lobby)
+
+        for user_id in user_ids:
+            user = User.objects.get(id=user_id)
+            user.profile.game_role = 0
+            user.save()
+
+        # create a werewolf
+        if 3 < user_count < 7:
+            user = User.objects.get(id=user_ids[0])
+            user.profile.game_role = 1
+            user.save()
 
 #
 # class DeleteLobby(View):
