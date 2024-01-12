@@ -38,7 +38,7 @@ class LobbyJoinView(View):
     def get(self, request, id):
         user = request.user
         alert = 2
-        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2,id=id).count()
+        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2, id=id).count()
 
         try:
             lobby = Lobby.objects.get(id=id)
@@ -60,13 +60,12 @@ class LobbyLeaveView(View):
     def get(self, request, id):
         user = request.user
         alert = 3
-        try:
-            lobby = Lobby.objects.get(id=id)
+        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2)
 
-            if user not in lobby.players.all():
-                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
-            else:
-                lobby.players.remove(user)
+        try:
+            for l in lobbies:
+                l.players.remove(user)
+
         except Lobby.DoesNotExist:
             redirect('/lobby/')
         return redirect(f'/lobby/{id}/')
@@ -82,7 +81,7 @@ class LobbyCreateView(View):
 
         if len(name) < 3:
             return render(request, 'lobby/CreateLobby.html', {"error": "Name should be longer than 2 characters"})
-        Newlobby = Lobby.objects.create(name=name, max_players=10, game_admin=request.user, game_status=0)
+        Lobby.objects.create(name=name, max_players=10, game_admin=request.user, game_status=0)
         return redirect(f'/lobby/')
 
 
@@ -111,10 +110,6 @@ class GameStart(View):
             user = User.objects.get(id=user_ids[0])
             user.profile.game_role = 1
             user.save()
-
-
-
-
 
 #
 # class DeleteLobby(View):
