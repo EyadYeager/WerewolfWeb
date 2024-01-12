@@ -15,15 +15,22 @@
             alertMessage = 'Not enough players'
             break
         case 2:
-            alertMessage = 'Already in game'
+            alertMessage = 'Already in another game'
             break
         case 3:
             alertMessage = 'Not in game'
+            break
+        case 4:
+            alertMessage = 'Already in this lobby'
+            break
+        case 5:
+            alertMessage = 'Removed you from another lobby'
             break
         default:
              alertMessage = 'Error'
             break
     }
+
 
     alert(alertMessage)
     window.location.href = "http://localhost:8000/lobby/{{ id }}";
