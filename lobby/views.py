@@ -38,14 +38,19 @@ class LobbyJoinView(View):
     def get(self, request, id):
         user = request.user
         alert = 2
+        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2,id=id).count()
+
         try:
             lobby = Lobby.objects.get(id=id)
 
-            if user not in lobby.players.all():
-                lobby.players.add(user)
-            else:
-                print("Already in game")
+            if user in lobby.players.all():
+                alert = 4
                 return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+            elif lobbies > 0:
+                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+            else:
+                lobby.players.add(user)
+
         except Lobby.DoesNotExist:
             redirect('/lobby/')
         return redirect(f'/lobby/{id}/')
@@ -106,6 +111,10 @@ class GameStart(View):
             user = User.objects.get(id=user_ids[0])
             user.profile.game_role = 1
             user.save()
+
+
+
+
 
 #
 # class DeleteLobby(View):
