@@ -4,7 +4,7 @@
     <div class="player-info">
         <div>
             <ol>
-                {% for p in lobby.players.all %}
+                {% for p in lobby.participants.all %}
                     <li>{{ p }}</li>
                 {% endfor %}
             </ol>

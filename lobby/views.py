@@ -1,11 +1,11 @@
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
 
-from lobby.models import Lobby, Round
+from lobby.models import Lobby, Participant
 from WerewolfWeb.settings import GAME_STATUS
 
 
@@ -31,6 +31,8 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
+        print(request.user.id)
+
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
 
@@ -38,18 +40,19 @@ class LobbyJoinView(View):
     def get(self, request, id):
         user = request.user
         alert = 2
-        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2, id=id).count()
 
+        participants_count = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
+        print(request.user)
         try:
             lobby = Lobby.objects.get(id=id)
 
-            if user in lobby.players.all():
+            if participants_count > 0:
                 alert = 4
                 return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
-            elif lobbies > 0:
-                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+
             else:
-                lobby.players.add(user)
+                participant = Participant(userId=request.user, lobbyId=lobby, role=0, vote_count=0)
+                participant.save()
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
@@ -59,12 +62,11 @@ class LobbyJoinView(View):
 class LobbyLeaveView(View):
     def get(self, request, id):
         user = request.user
-        alert = 3
-        lobbies = Lobby.objects.filter(players=request.user).exclude(game_status=2)
+        participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
 
         try:
-            for l in lobbies:
-                l.players.remove(user)
+            for l in participants:
+                l.delete()
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
@@ -81,22 +83,22 @@ class LobbyCreateView(View):
 
         if len(name) < 3:
             return render(request, 'lobby/CreateLobby.html', {"error": "Name should be longer than 2 characters"})
-        Lobby.objects.create(name=name, max_players=10, game_admin=request.user, game_status=0)
+        Lobby.objects.create(lobby_name=name, max_players=10, game_admin=request.user, game_status=0)
         return redirect(f'/lobby/')
 
 
 class GameStart(View):
     def get(self, request, id):
         game = Lobby.objects.get(id=id)
-        player_count = game.players.count()
+        player_count = game.participants.count()
         if player_count < 3:
             alert = 1
             return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
-        gamestatus = Lobby.objects.get(id=id)
-        gamestatus.game_status = 1
-        gamestatus.save()
-        return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
+        lobby = Lobby.objects.get(id=id)
+        lobby.game_status = 1
+        lobby.save()
+        return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
 
