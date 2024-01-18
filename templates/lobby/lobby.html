@@ -15,8 +15,8 @@
 <a href="/lobby/">All lobbies</a>
 <ol>
     {#{{ user }}#}
-    {% for p in lobby.players.all %}
-        <li>{{ p }}</li>
+    {% for p in lobby.participants.all %}
+        <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
 <a href="/lobby/{{ lobby.id }}/join/">Join game!</a>

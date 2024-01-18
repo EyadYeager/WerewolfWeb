@@ -132,5 +132,12 @@ GAME_ROLES = (
     (1, 'Werewolf'),
     (2, 'Doctor')
 )
+
+GAME_CYCLE = (
+    (0, 'Day'),
+    (1, 'Night')
+
+)
+
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
