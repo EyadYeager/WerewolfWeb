@@ -95,10 +95,10 @@ class GameStart(View):
             alert = 1
             return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
-        gamestatus = Lobby.objects.get(id=id)
-        gamestatus.game_status = 1
-        gamestatus.save()
-        return render(request, 'lobby/GameStart.html', {'gamestatus': gamestatus})
+        lobby = Lobby.objects.get(id=id)
+        lobby.game_status = 1
+        lobby.save()
+        return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
 

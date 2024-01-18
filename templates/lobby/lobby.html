@@ -7,10 +7,10 @@
         }
     </style>
     <meta charset="UTF-8">
-    <title>Lobby - {{ lobby.name }}</title>
+    <title>Lobby - {{ lobby.lobby_name }}</title>
 </head>
 <body>
-<h1>Lobby: {{ lobby.name }}</h1>
+<h1>Lobby: {{ lobby.lobby_name }}</h1>
 <p>Max players: {{ lobby.max_players }} - status: {{ lobby.get_game_status_display }}</p>
 <a href="/lobby/">All lobbies</a>
 <ol>
