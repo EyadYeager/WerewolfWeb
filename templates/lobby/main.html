@@ -44,7 +44,7 @@
     <h1>Current lobbies</h1>
 <ol>
     {% for l in lobbies %}
-        <li><a href="/lobby/{{ l.id }}/">{{ l.name }} </a> status: {{ l.get_game_status_display }}</li>
+        <li><a href="/lobby/{{ l.id }}/">{{ l.lobby_name }} </a> status: {{ l.get_game_status_display }}</li>
     {% endfor %}
 </ol>
     
