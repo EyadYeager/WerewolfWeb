@@ -31,7 +31,8 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        print(request.user.id)
+        you = Participant.objects.get(userId=request.user.id)
+        print(you.voted)
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
@@ -42,7 +43,7 @@ class LobbyJoinView(View):
         alert = 2
 
         participants_count = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
-        print(request.user)
+        # print(request.user)
         try:
             lobby = Lobby.objects.get(id=id)
 
@@ -91,19 +92,23 @@ class GameStart(View):
     def get(self, request, id):
         game = Lobby.objects.get(id=id)
         player_count = game.participants.count()
-        if player_count < 3:
-            alert = 1
-            return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
+        # if player_count < 3:
+        #      alert = 1
+        #      return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
         lobby = Lobby.objects.get(id=id)
         lobby.game_status = 1
         lobby.save()
+        everyone = Participant.objects.get()
+        everyone.voted = False
+        everyone.save()
         return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
 
         for user_id in user_ids:
             user = User.objects.get(id=user_id)
+            user.profile.game_role = 0
             user.profile.game_role = 0
             user.save()
 
@@ -112,6 +117,36 @@ class GameStart(View):
             user = User.objects.get(id=user_ids[0])
             user.profile.game_role = 1
             user.save()
+
+
+class VoteView(View):
+    def get(self, request, id):
+        Participant.userId = request.user.id
+        print(request.GET['userid'])
+        id = int(request.GET['userid'])
+
+        # participant object (you)
+        you = Participant.objects.get(userId=request.user.id)
+        if you.voted:
+            alert = 6
+            # render a page that redirects the user away, with message, you already have voted
+            return render(request, 'lobby/alert.html', {'alert': alert})
+
+        you.voted = True
+        you.save()
+        # participant object (suspect)
+        current_participant = Participant.objects.get(userId=id)
+        # change the voted status after nighttime
+        current_participant.vote_count += 1
+        print(current_participant.vote_count)
+        current_participant.save()
+        return render(request, 'lobby/GameStart.html')
+
+        # vote_button = Participant.vote_count.get()
+        # vote_button += Participant.userId
+        # vote_button += 1
+        # vote_button.save()
+        # print(Participant.vote_count)
 
 #
 # class DeleteLobby(View):
