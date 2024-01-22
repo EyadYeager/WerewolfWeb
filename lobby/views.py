@@ -31,8 +31,7 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        you = Participant.objects.get(userId=request.user.id)
-        print(you.voted)
+
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
