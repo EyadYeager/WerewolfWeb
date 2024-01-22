@@ -7,7 +7,7 @@
 <body>
 
 <script>
-    
+
     let alertMessage;
 
     switch ({{ alert }}) {
@@ -26,8 +26,11 @@
         case 5:
             alertMessage = 'Removed you from another lobby'
             break
+        case 6:
+            alertMessage = 'Already voted'
+            break
         default:
-             alertMessage = 'Error'
+            alertMessage = 'Error'
             break
     }
 

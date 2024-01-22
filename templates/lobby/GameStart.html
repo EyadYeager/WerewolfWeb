@@ -1,3 +1,8 @@
+<html lang="en">
+<head>
+
+    <title>Werewolf</title></head>
+<body>
 <div id="game-players">
     <div class="players-list">
     </div>
@@ -5,10 +10,16 @@
         <div>
             <ol>
                 {% for p in lobby.participants.all %}
-                    <li>{{ p }}</li>
+                    <li>{{ p.userId.username }}
+                        <form method="get" action="vote/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ request.user.id }}><input type="submit" value="Vote">
+                        </form>
+                    </li>
+
                 {% endfor %}
             </ol>
         </div>
+
         <div class="players-footer">
             <div class="dots" style="display: none;">
                 <div class="dot active">
@@ -18,3 +29,5 @@
         </div>
     </div>
 </div>
+</body>
+</html>
