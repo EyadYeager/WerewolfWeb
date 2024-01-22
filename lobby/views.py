@@ -31,7 +31,8 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-
+        you = Participant.objects.get(userId=request.user.id)
+        print(you.vote_count)
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
@@ -98,6 +99,9 @@ class GameStart(View):
         lobby = Lobby.objects.get(id=id)
         lobby.game_status = 1
         lobby.save()
+        everyone = Participant.objects.get()
+        everyone.vote_count = 0
+        everyone.save()
         return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
