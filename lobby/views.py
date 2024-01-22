@@ -98,9 +98,6 @@ class GameStart(View):
         lobby = Lobby.objects.get(id=id)
         lobby.game_status = 1
         lobby.save()
-        everyone = Participant.objects.get()
-        everyone.voted = False
-        everyone.save()
         return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
