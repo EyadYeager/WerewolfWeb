@@ -1,12 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db.models import Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
 
 from lobby.models import Lobby, Participant
-from WerewolfWeb.settings import GAME_STATUS
+from WerewolfWeb.settings import GAME_STATUS, GAME_ROLES
 
 
 # Create your views here.
@@ -21,7 +22,7 @@ class LobbyView(View):
         # print(id)
 
         try:
-            lobby = Lobby.objects.get(id=id)
+            lobby = Lobby.objects.get(lobbyid=id)
         except Lobby.DoesNotExist:
             return redirect('/lobby/')
 
@@ -31,8 +32,11 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        you = Participant.objects.get(userId=request.user.id)
-        print(you.vote_count)
+        # you = Participant.objects.get(userId=request.user.id)
+        # print(you.vote_count)
+        # you.voted = False
+        # you.save()
+        # print(you.voted)
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
@@ -45,7 +49,7 @@ class LobbyJoinView(View):
         participants_count = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         # print(request.user)
         try:
-            lobby = Lobby.objects.get(id=id)
+            lobby = Lobby.objects.get(lobbyid=id)
 
             if participants_count > 0:
                 alert = 4
@@ -90,18 +94,23 @@ class LobbyCreateView(View):
 
 class GameStart(View):
     def get(self, request, id):
-        game = Lobby.objects.get(id=id)
+        game = Lobby.objects.get(lobbyid=id)
         player_count = game.participants.count()
         # if player_count < 3:
-        #      alert = 1
-        #      return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
+        #     alert = 1
+        #     return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
-        lobby = Lobby.objects.get(id=id)
-        lobby.game_status = 1
-        lobby.save()
-        everyone = Participant.objects.get()
-        everyone.vote_count = 0
-        everyone.save()
+        lobby = Lobby.objects.get(lobbyid=id)
+        if lobby.game_status == 0:
+            lobby.game_status = 1
+            lobby.save()
+            everyone = Participant.objects.filter(lobbyId=game)
+            for everyone in Participant.objects.all():
+                everyone.vote_count = 0
+                everyone.voted = False
+                everyone.role = 0
+                everyone.save()
+
         return render(request, 'lobby/GameStart.html', {'lobby': lobby})
 
         round = Round.objects.create(lobby=lobby)
@@ -121,26 +130,52 @@ class GameStart(View):
 
 class VoteView(View):
     def get(self, request, id):
-        Participant.userId = request.user.id
+        lobbyid = Lobby.objects.get(lobbyid=id)
+        # Participant.userId = request.user.id
         print(request.GET['userid'])
-        id = int(request.GET['userid'])
+        current_participant_id = int(request.GET['userid'])
 
         # participant object (you)
+
         you = Participant.objects.get(userId=request.user.id)
+
+        if you.role == 3:
+            alert = 7
+            # render a page that redirects the user away, with message, you already have voted
+            return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid,
+                                                        'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
+
         if you.voted:
             alert = 6
             # render a page that redirects the user away, with message, you already have voted
-            return render(request, 'lobby/alert.html', {'alert': alert})
-
+            return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid,
+                                                        'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
         you.voted = True
         you.save()
         # participant object (suspect)
-        current_participant = Participant.objects.get(userId=id)
+        current_participant = Participant.objects.get(userId=current_participant_id)
         # change the voted status after nighttime
         current_participant.vote_count += 1
         print(current_participant.vote_count)
         current_participant.save()
-        return render(request, 'lobby/GameStart.html')
+        maxcount = Participant.objects.aggregate(Max("vote_count"))
+
+        check_voting = Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3)
+        # check if everyone voted
+        if check_voting.count() == 0:
+
+            voted_participants = Participant.objects.filter(vote_count=maxcount['vote_count__max'], lobbyId=lobbyid)
+            if voted_participants.count() == 1:
+                soon_to_be_dead_particpant = voted_participants[0]
+                soon_to_be_dead_particpant.role = 3
+                soon_to_be_dead_particpant.save()
+
+                print(soon_to_be_dead_particpant.role)
+                print(soon_to_be_dead_particpant.userId.username)
+                return render(request, 'lobby/GameStart.html',
+                              {'lobby': lobbyid, 'Dead_participant': soon_to_be_dead_particpant})
+        return render(request, 'lobby/GameStart.html',
+                      {'lobby': lobbyid})
 
         # vote_button = Participant.vote_count.get()
         # vote_button += Participant.userId

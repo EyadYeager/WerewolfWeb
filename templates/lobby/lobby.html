@@ -19,9 +19,9 @@
         <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobby.id }}/join/">Join game!</a>
-<a href="/lobby/{{ lobby.id }}/leave/">leave all games</a>
-<a href="/lobby/{{ lobby.id }}/gamestart/">Start game</a>
+<a href="/lobby/{{ lobby.lobbyid }}/join/">Join game!</a>
+<a href="/lobby/{{ lobby.lobbyid }}/leave/">leave all games</a>
+<a href="/lobby/{{ lobby.lobbyid }}/gamestart/">Start game</a>
 
 {% if id == 0 %}
     <div class="alert alert-error">

@@ -130,13 +130,13 @@ GAME_STATUS = (
 GAME_ROLES = (
     (0, 'Citizen'),
     (1, 'Werewolf'),
-    (2, 'Doctor')
+    (2, 'Doctor'),
+    (3, 'DEAD'),
 )
 
 GAME_CYCLE = (
     (0, 'Day'),
     (1, 'Night')
-
 )
 
 LOGIN_REDIRECT_URL = '/'

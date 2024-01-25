@@ -6,28 +6,37 @@
 <div id="game-players">
     <div class="players-list">
     </div>
+    hello!
     <div class="player-info">
         <div>
+
             <ol>
                 {% for p in lobby.participants.all %}
                     <li>{{ p.userId.username }}
-                        <form method="get" action="vote/">            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ request.user.id }}><input type="submit" value="Vote">
+                        <form method="get" action="/lobby/{{ lobby.lobbyid }}/gamestart/vote/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
+                                                                                                   value="Vote">
                         </form>
                     </li>
 
                 {% endfor %}
             </ol>
+            {% if Dead_participant %}
+                <a>{{ Dead_participant.userId.username }} is dead </a>
+            {% endif %}
         </div>
+
 
         <div class="players-footer">
             <div class="dots" style="display: none;">
                 <div class="dot active">
                     <div class="inner"></div>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
 </html>
