@@ -94,26 +94,27 @@ class LobbyCreateView(View):
 
 class GameStart(View):
     def get(self, request, id):
-        game = Lobby.objects.get(lobbyid=id)
-        player_count = game.participants.count()
+        lobbyid = Lobby.objects.get(lobbyid=id)
+        player_count = lobbyid.participants.count()
         # if player_count < 3:
         #     alert = 1
         #     return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
-        lobby = Lobby.objects.get(lobbyid=id)
-        if lobby.game_status == 0:
-            lobby.game_status = 1
-            lobby.save()
-            everyone = Participant.objects.filter(lobbyId=game)
+        lobbyid.game_cycle = 0
+        lobbyid.save()
+        if lobbyid.game_status == 0:
+            lobbyid.game_status = 1
+            lobbyid.save()
+            everyone = Participant.objects.filter(lobbyId=lobbyid)
             for everyone in Participant.objects.all():
                 everyone.vote_count = 0
                 everyone.voted = False
                 everyone.role = 0
                 everyone.save()
 
-        return render(request, 'lobby/GameStart.html', {'lobby': lobby})
+        return render(request, 'lobby/GameStart.html', {'lobbyid': lobbyid})
 
-        round = Round.objects.create(lobby=lobby)
+        round = Round.objects.create(lobby=lobbyid)
 
         for user_id in user_ids:
             user = User.objects.get(id=user_id)
@@ -140,15 +141,15 @@ class VoteView(View):
         you = Participant.objects.get(userId=request.user.id)
 
         if you.role == 3:
-            alert = 7
+            in_game_alert = 1
             # render a page that redirects the user away, with message, you already have voted
-            return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid,
+            return render(request, 'lobby/alert.html', {'alert': in_game_alert, 'lobbyid': lobbyid,
                                                         'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
 
         if you.voted:
-            alert = 6
+            in_game_alert = 0
             # render a page that redirects the user away, with message, you already have voted
-            return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid,
+            return render(request, 'lobby/alert.html', {'alert': in_game_alert, 'lobbyid': lobbyid,
                                                         'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
         you.voted = True
         you.save()
@@ -172,8 +173,10 @@ class VoteView(View):
 
                 print(soon_to_be_dead_particpant.role)
                 print(soon_to_be_dead_particpant.userId.username)
+                lobbyid.game_cycle = 1
                 return render(request, 'lobby/GameStart.html',
                               {'lobby': lobbyid, 'Dead_participant': soon_to_be_dead_particpant})
+
         return render(request, 'lobby/GameStart.html',
                       {'lobby': lobbyid})
 

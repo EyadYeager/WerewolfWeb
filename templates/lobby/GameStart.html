@@ -6,16 +6,18 @@
 <div id="game-players">
     <div class="players-list">
     </div>
-    hello!
-    <div class="player-info">
+    <a>It is day time</a>
+    {% if lobbyid.game_cycle == 0 %}
+        <div class="player-info">
         <div>
 
             <ol>
-                {% for p in lobby.participants.all %}
+                {% for p in lobbyid.participants.all %}
                     <li>{{ p.userId.username }}
-                        <form method="get" action="/lobby/{{ lobby.lobbyid }}/gamestart/vote/">            {% csrf_token %}
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyid }}/gamestart/vote/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
-                                                                                                   value="Vote">
+                                                                                               value="Vote">
                         </form>
                     </li>
 
@@ -25,16 +27,23 @@
                 <a>{{ Dead_participant.userId.username }} is dead </a>
             {% endif %}
         </div>
+        
+    {% endif %}
 
+    {% if lobbyid.game_cycle == 1 %}
 
-        <div class="players-footer">
-            <div class="dots" style="display: none;">
-                <div class="dot active">
-                    <div class="inner"></div>
+<a>It is night time</a>
 
-                </div>
+    {% endif %}
+
+    <div class="players-footer">
+        <div class="dots" style="display: none;">
+            <div class="dot active">
+                <div class="inner"></div>
+
             </div>
         </div>
+    </div>
     </div>
 </div>
 
