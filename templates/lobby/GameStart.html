@@ -3,10 +3,24 @@
 
     <title>Werewolf</title></head>
 <body>
+
+<script>
+
+    async function delay() {
+        const night = await document.getElementById("test");
+        const day = await document.getElementById("test2");
+
+        night.textContent = "It is night time";
+        day.textContent = "It is day time";
+    }
+
+    setTimeout(delay, 5000)
+</script>
+
 <div id="game-players">
     <div class="players-list">
     </div>
-    <a>It is day time</a>
+    <a id="test2">It is day time</a><br>
     {% if lobbyid.game_cycle == 0 %}
         <div class="player-info">
         <div>
@@ -27,14 +41,30 @@
                 <a>{{ Dead_participant.userId.username }} is dead </a>
             {% endif %}
         </div>
-        
+
     {% endif %}
 
     {% if lobbyid.game_cycle == 1 %}
 
-<a>It is night time</a>
+        <a id="test"></a>
+        <ol>
+            {% for p in lobbyid.participants.all %}
+                {% if p.role != 3 %}
+                    <li>{{ p.userId.username }}
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyid }}/gamestart/vote/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
+                                                                                               value="Vote">
+                        </form>
+                    </li>
+                {% endif %}
+
+            {% endfor %}
+        </ol>
 
     {% endif %}
+
+
 
     <div class="players-footer">
         <div class="dots" style="display: none;">
