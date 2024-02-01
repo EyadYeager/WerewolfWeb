@@ -1,0 +1,78 @@
+<html lang="en">
+<head>
+
+    <title>Werewolf</title></head>
+<body>
+
+{#<script>#}
+{##}
+{#    async function delayText() {#}
+{#        const night = await document.getElementById("test");#}
+{#        const day = await document.getElementById("test2");#}
+{##}
+{#        night.textContent = "It is night time";#}
+{#        day.textContent = "It is day time";#}
+{#    }#}
+{#    #}
+{#    async function delayPlayers() {#}
+{#        const players = await document.getElementById("test3");#}
+{##}
+{#        players.style.display = "unset";#}
+{#    }#}
+{##}
+{#    setTimeout(delayText, 5000)#}
+{#    setTimeout(delayPlayers, 3000)#}
+{#</script>#}
+
+<div id="game-players">
+    <div class="players-list">
+    </div>
+    <a>It is day time</a><br>
+    <div class="player-info">
+        <div>
+
+            <ol>
+                {% for p in lobbyid.participants.all %}
+                    <li>{{ p.userId.username }}
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyid }}/gamestart/day/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
+                                                                                               value="Vote">
+                        </form>
+                    </li>
+
+                {% endfor %}
+            </ol>
+            {% if Dead_participant %}
+                <a>{{ Dead_participant.userId.username }} is dead </a>
+            {% endif %}
+        </div>
+
+        <script async>
+            async function JavaSucks() {
+                const lobby_id = "{{ lobbyid.lobbyid }}";
+                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+                const gamecycle = await response.text();
+                if (gamecycle == 1) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyid }}/gamestart/night/"
+                }
+            }
+
+            setInterval(JavaSucks, 3000)
+            
+        </script>
+
+
+        <div class="players-footer">
+            <div class="dots" style="display: none;">
+                <div class="dot active">
+                    <div class="inner"></div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

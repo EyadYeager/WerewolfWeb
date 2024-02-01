@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Night</title>
+</head>
+<body>
+<h1>It is nighttime</h1><br>
+<ol>
+    <a> NIGHT TIME </a>
+    {% for p in lobbyid.participants.all %}
+        <li>{{ p.userId.username }}
+            <form method="get"
+                  action="/lobby/{{ lobbyid.lobbyid }}/gamestart/night/">            {% csrf_token %}
+                <input type="hidden" name="userid_" value= {{ p.userId.id }}>
+                {% if p.role == 1 %}
+                    <input type="submit" value="KILL">
+                    
+                {% elif p.role == 2 %}
+                    <input type="submit" value="Save">
+                {% endif %}
+            </form>
+        </li>
+    {% endfor %}
+</ol>
+</body>
+</html>

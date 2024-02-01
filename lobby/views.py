@@ -1,3 +1,5 @@
+import asyncio
+
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -5,6 +7,8 @@ from django.db.models import Max
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
+from django.http import HttpResponse
+from celery import Celery, shared_task, result
 
 from lobby.models import Lobby, Participant
 from WerewolfWeb.settings import GAME_STATUS, GAME_ROLES
@@ -32,14 +36,14 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        # you = Participant.objects.get(userId=request.user.id)
-        # you.voted = False
-        # you.role = 0
-        # you.vote_count = 0
-        # you.save()
-        # print(you.vote_count)
-        # print(you.voted)
-        # print(you.role)
+        you = Participant.objects.get(userId=request.user.id)
+        you.voted = False
+        you.role = 0
+        you.vote_count = 0
+        you.save()
+        print(you.vote_count)
+        print(you.voted)
+        print(you.role)
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
@@ -112,7 +116,7 @@ class GameStart(View):
             everyone.role = 0
             everyone.save()
 
-        return render(request, 'lobby/GameStart.html', {'lobbyid': lobbyid})
+        return render(request, 'lobby/GameStartDay.html', {'lobbyid': lobbyid})
 
         round = Round.objects.create(lobby=lobbyid)
 
@@ -129,9 +133,10 @@ class GameStart(View):
             user.save()
 
 
-class VoteView(View):
+class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyid=id)
+
         # Participant.userId = request.user.id
         print(request.GET['userid'])
         current_participant_id = int(request.GET['userid'])
@@ -172,16 +177,29 @@ class VoteView(View):
                 soon_to_be_dead_participant.role = 3
                 soon_to_be_dead_participant.save()
 
-                print(soon_to_be_dead_participant.role)
-                print(soon_to_be_dead_participant.userId.username)
                 lobbyid.game_cycle = 1
                 lobbyid.save()
-                print(lobbyid.game_cycle)
-                return render(request, 'lobby/GameStart.html',
+                print(soon_to_be_dead_participant.role)
+                print(soon_to_be_dead_participant.userId.username)
+
+                return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant})
 
-        return render(request, 'lobby/GameStart.html',
-                      {'lobby': lobbyid})
+        return render(request, 'lobby/GameStartDay.html',
+                      {'lobbyid': lobbyid})
+
+
+class NightView(View):
+    def get(self, request, id):
+        lobbyid = Lobby.objects.get(lobbyid=id)
+        return render(request, 'lobby/GameStartNight.html', {'lobbyid': lobbyid})
+
+
+class CheckCycleView(View):
+    def get(self, request, id):
+        lobby = Lobby.objects.get(lobbyid=id)
+
+        return HttpResponse(lobby.game_cycle)
 
         # vote_button = Participant.vote_count.get()
         # vote_button += Participant.userId
