@@ -30,6 +30,9 @@ class Participant(models.Model):
     role = models.IntegerField(choices=GAME_ROLES)
     vote_count = models.IntegerField()
     voted = models.BooleanField(default=False)
+    killed = models.IntegerField(default=0)
+    rescued = models.IntegerField(default=0)
+
 
 # class GameCycle(models.Model):
 #     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)

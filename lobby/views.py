@@ -3,7 +3,7 @@ import asyncio
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.db.models import Max
+from django.db.models import Max, Sum
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
@@ -192,6 +192,26 @@ class DayView(View):
 class NightView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyid=id)
+        current_participant_id = int(request.GET['userid'])
+        action_id = int(request.GET['action'])
+        current_participant = Participant.objects.get(userId=current_participant_id)
+        if action_id == "killed":
+            current_participant.killed += 1
+        else:
+            current_participant.rescued += 1
+        current_participant.save()
+        counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))
+        counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))
+        counting_killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
+        counting_doctors = Participant.objects.filter(lobbyId=lobbyid, role=2).count()
+        if counting_killers == counting_killed and counting_doctors == counting_rescued:
+            participants = Participant.objects.filter(lobbyId=lobbyid)
+            for p in participants:
+                if p.killed > p.rescued:
+                    p.role = 3
+                p.killed = 0
+                p.rescued = 0
+                p.save()
         return render(request, 'lobby/GameStartNight.html', {'lobbyid': lobbyid})
 
 
