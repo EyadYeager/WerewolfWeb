@@ -240,7 +240,7 @@ class NightView(View):
                 p.killed = 0
                 p.rescued = 0
                 p.save()
-            dead_participants = Participant.objects.get(lobbyId=lobbyid, role=3)
+        dead_participants = Participant.objects.get(lobbyId=lobbyid, role=3)
         return render(request, 'lobby/GameStartNight.html',
                       {'lobbyid': lobbyid, "dead_participants": dead_participants})
 
@@ -250,12 +250,6 @@ class CheckCycleView(View):
         lobby = Lobby.objects.get(lobbyId=id)
 
         return HttpResponse(lobby.game_cycle)
-
-        # vote_button = Participant.vote_count.get()
-        # vote_button += Participant.userId
-        # vote_button += 1
-        # vote_button.save()
-        # print(Participant.vote_count)
 
 #
 # class DeleteLobby(View):
