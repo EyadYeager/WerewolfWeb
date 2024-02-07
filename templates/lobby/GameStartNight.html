@@ -12,7 +12,7 @@
             {% if p.role == 1 %}
 
                 <form method="get"
-                      action="/lobby/{{ lobbyid.lobbyid }}/gamestart/night/">            {% csrf_token %}
+                      action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
                     <input type="hidden" name="userid" value= {{ p.userId.id }}>
                     <input type="hidden" name="action" value="killed">
                     <input type="submit" value="KILL">
@@ -20,7 +20,7 @@
             {% elif p.role == 2 %}
 
                 <form method="get"
-                      action="/lobby/{{ lobbyid.lobbyid }}/gamestart/night/">            {% csrf_token %}
+                      action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
                     <input type="hidden" name="userid_doctor" value= {{ p.userId.id }}>
                     <input type="hidden" name="action" value="rescued">
                     <input type="submit" value="Rescue">
@@ -29,6 +29,10 @@
             {% endif %}
         </li>
     {% endfor %}
+    {% for participants in lobbyid.participants.all %}
+    <ol>
+        <li>{{ dead_participants }} is dead</li>
+    </ol>
 </ol>
 </body>
 </html>

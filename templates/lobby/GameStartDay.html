@@ -35,7 +35,7 @@
                 {% for p in lobbyid.participants.all %}
                     <li>{{ p.userId.username }}
                         <form method="get"
-                              action="/lobby/{{ lobbyid.lobbyid }}/gamestart/day/">            {% csrf_token %}
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
                                                                                                value="Vote">
                         </form>
@@ -50,16 +50,16 @@
 
         <script async>
             async function JavaSucks() {
-                const lobby_id = "{{ lobbyid.lobbyid }}";
+                const lobby_id = "{{ lobbyid.lobbyId }}";
                 const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
                 const gamecycle = await response.text();
                 if (gamecycle == 1) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyid }}/gamestart/night/"
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night/"
                 }
             }
 
             setInterval(JavaSucks, 3000)
-            
+
         </script>
 
 

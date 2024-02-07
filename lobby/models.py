@@ -12,7 +12,7 @@ from WerewolfWeb.settings import GAME_STATUS, GAME_CYCLE, GAME_ROLES
 
 
 class Lobby(models.Model):
-    lobbyid = models.AutoField(primary_key=True)
+    lobbyId = models.AutoField(primary_key=True)
     lobby_name = models.CharField(max_length=255)
     # players = models.ManyToManyField(User, default=None, blank=True)
     game_admin = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
