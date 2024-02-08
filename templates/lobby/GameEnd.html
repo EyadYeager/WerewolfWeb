@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Page Title</title>
+</head>
+<body>
+{% if killers.count >= townspeople %}
+    <h1>Werewolfs won</h1>    <br>
+    <p>The Werewolf were:</p>
+
+    <ol>
+        {% for k in killers %}
+            <li>{{ k.userId.username }}</li>
+        {% endfor %}
+        <br>
+    </ol>
+{% endif %}
+
+{% if killers.count < 1 %}
+    <h1>Townspeople won</h1>    <br>
+    <p>The Werewolf were:</p>
+    <ol>
+
+        {% for k in killers %}
+            <li>{{ k.userId.username }}</li>
+        {% endfor %}
+        <br>
+    </ol>
+{% endif %}
+
+</body>
+</html>

@@ -20,7 +20,6 @@ from django.contrib.auth import views as auth_views
 
 from lobby.views import *
 from main.views import MainView
-from lobby.models import Lobby
 
 urlpatterns = [
     path('admin/', admin.site.urls),

@@ -3,7 +3,7 @@ import random
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.db.models import Max, Sum
+from django.db.models import Max, Sum, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
@@ -138,9 +138,9 @@ class GameStart(View):
                 participants.role = role_counter
             participants.save()
             role_counter = (role_counter + 1) % 3
+        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         werewolfs = Participant.objects.filter(lobbyId=lobbyid, role=1)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
-        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         for p in Participant.objects.filter(lobbyId=lobbyid):
             print(p.userId.username, p.role, p.voted, p.vote_count)
 
@@ -164,6 +164,7 @@ class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
         current_participant_id = -1
+        killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
 
         # Participant.userId = request.user.id
         # print(request.GET['userid'])
@@ -209,6 +210,10 @@ class DayView(View):
                 lobbyid.save()
                 print(soon_to_be_dead_participant.role)
                 print(soon_to_be_dead_participant.userId.username)
+                killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
+                townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
+                if killers.count() < 1 or killers.count() >= townspeople:
+                    return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople})
 
                 return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant})
@@ -220,29 +225,40 @@ class DayView(View):
 class NightView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        current_participant_id = int(request.GET['userid'])
-        action_id = int(request.GET['action'])
-        current_participant = Participant.objects.get(userId=current_participant_id)
-        if action_id == "killed":
-            current_participant.killed += 1
-        else:
-            current_participant.rescued += 1
-        current_participant.save()
-        counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))
-        counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))
-        counting_killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
-        counting_doctors = Participant.objects.filter(lobbyId=lobbyid, role=2).count()
-        if counting_killers == counting_killed and counting_doctors == counting_rescued:
-            participants = Participant.objects.filter(lobbyId=lobbyid)
-            for p in participants:
-                if p.killed > p.rescued:
-                    p.role = 3
-                p.killed = 0
-                p.rescued = 0
-                p.save()
-        dead_participants = Participant.objects.get(lobbyId=lobbyid, role=3)
+        # current_participant_id = -1
+        # action_id = -1
+        if "action" in request.GET:
+            current_participant_id = int(request.GET['userid'])
+            action_id = str(request.GET['action'])
+            current_participant = Participant.objects.get(userId=current_participant_id)
+            if action_id == "killed":
+                current_participant.killed += 1
+            else:
+                current_participant.rescued += 1
+            current_participant.save()
+            counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))["killed__sum"] or 0
+            counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))["rescued__sum"] or 0
+            counting_killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
+            counting_doctors = Participant.objects.filter(lobbyId=lobbyid, role=2).count()
+            if counting_killers <= counting_killed and counting_doctors <= counting_rescued:
+                participants = Participant.objects.filter(lobbyId=lobbyid)
+                for p in participants:
+                    if p.killed > p.rescued:
+                        p.role = 3
+                    p.killed = 0
+                    p.rescued = 0
+                    p.save()
+            killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
+            townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
+            if killers.count() < 1 or killers.count() >= townspeople:
+                return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople})
+        dead_participants = Participant.objects.filter(lobbyId=lobbyid, role=3)
+
+        you = Participant.objects.get(userId=request.user.id)
+        print(Participant.objects.filter(lobbyId=lobbyid,role=3).count())
+        lobbyid.game_cycle=0
         return render(request, 'lobby/GameStartNight.html',
-                      {'lobbyid': lobbyid, "dead_participants": dead_participants})
+                      {'lobbyid': lobbyid, "dead_participants": dead_participants, "you": you})
 
 
 class CheckCycleView(View):

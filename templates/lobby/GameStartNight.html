@@ -8,31 +8,51 @@
 <ol>
 
     {% for p in lobbyid.participants.all %}
-        <li>{{ p.userId.username }}
-            {% if p.role == 1 %}
+        {% if p.role != 3 %}
+            <li>{{ p.userId.username }}
 
-                <form method="get"
-                      action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                    <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                    <input type="hidden" name="action" value="killed">
-                    <input type="submit" value="KILL">
-                </form>
-            {% elif p.role == 2 %}
+                {% if you.role == 1 %}
 
-                <form method="get"
-                      action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                    <input type="hidden" name="userid_doctor" value= {{ p.userId.id }}>
-                    <input type="hidden" name="action" value="rescued">
-                    <input type="submit" value="Rescue">
-                </form>
+                    <form method="get"
+                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                        <input type="hidden" name="action" value="killed">
+                        <input type="submit" value="KILL">
+                    </form>
+                {% elif you.role == 2 %}
 
-            {% endif %}
-        </li>
+                    <form method="get"
+                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                        <input type="hidden" name="action" value="rescued">
+                        <input type="submit" value="Rescue">
+                    </form>
+
+                {% endif %}
+
+            </li>
+        {% endif %}
     {% endfor %}
-    {% for participants in lobbyid.participants.all %}
     <ol>
-        <li>{{ dead_participants }} is dead</li>
+        {% for participant in dead_participants %}
+
+            <li>{{ participant.userId.username }} is dead</li>
+
+        {% endfor %}
     </ol>
 </ol>
+        <script async>
+            async function JavaSucks() {
+                const lobby_id = "{{ lobbyid.lobbyId }}";
+                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+                const gamecycle = await response.text();
+                if (gamecycle == 0) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
+                }
+            }
+
+            setInterval(JavaSucks, 3000)
+
+        </script>
 </body>
 </html>
