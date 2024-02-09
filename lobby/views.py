@@ -236,8 +236,10 @@ class NightView(View):
             else:
                 current_participant.rescued += 1
             current_participant.save()
-            counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))["killed__sum"] or 0
-            counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))["rescued__sum"] or 0
+            counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))[
+                                  "killed__sum"] or 0
+            counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))[
+                                   "rescued__sum"] or 0
             counting_killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
             counting_doctors = Participant.objects.filter(lobbyId=lobbyid, role=2).count()
             if counting_killers <= counting_killed and counting_doctors <= counting_rescued:
@@ -255,8 +257,8 @@ class NightView(View):
         dead_participants = Participant.objects.filter(lobbyId=lobbyid, role=3)
 
         you = Participant.objects.get(userId=request.user.id)
-        print(Participant.objects.filter(lobbyId=lobbyid,role=3).count())
-        lobbyid.game_cycle=0
+        print(Participant.objects.filter(lobbyId=lobbyid, role=3).count())
+        lobbyid.game_cycle = 0
         return render(request, 'lobby/GameStartNight.html',
                       {'lobbyid': lobbyid, "dead_participants": dead_participants, "you": you})
 

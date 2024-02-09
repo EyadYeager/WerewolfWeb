@@ -41,18 +41,18 @@
         {% endfor %}
     </ol>
 </ol>
-        <script async>
-            async function JavaSucks() {
-                const lobby_id = "{{ lobbyid.lobbyId }}";
-                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
-                const gamecycle = await response.text();
-                if (gamecycle == 0) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
-                }
-            }
+<script async>
+    async function JavaSucks() {
+        const lobby_id = "{{ lobbyid.lobbyId }}";
+        const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+        const gamecycle = await response.text();
+        if (gamecycle == 0) {
+            window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
+        }
+    }
 
-            setInterval(JavaSucks, 3000)
+    setInterval(JavaSucks, 3000)
 
-        </script>
+</script>
 </body>
 </html>
