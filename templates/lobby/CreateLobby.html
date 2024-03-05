@@ -12,7 +12,7 @@
             justify-content: center; /* Center content horizontally */
             align-items: center; /* Center content vertically */
             height: 100vh; /* Full viewport height */
-            background-color: #f5f5f5; /* Light grey background for contrast */
+            background-color: black; /* Light grey background for contrast */
         }
 
         .box {
@@ -28,7 +28,7 @@
 
         .box a {
             font-size: 24px; /* Reasonable font size for the prompt */
-            color: #333; /* Darker text for readability */
+            color: #0056b3; /* Darker text for readability */
             text-decoration: none; /* No underlining */
             font-family: Algerian;
         }
@@ -64,7 +64,6 @@
         /* Error message styling */
         .error {
             color: #ff0000; /* Red color for errors */
-            margin-top: 20px; /* Space above the error message */
         }
     </style>
 </head>
@@ -77,11 +76,13 @@
         <input class="searchbar" type="text" name="name" placeholder="Lobby Name">
         <button class="searchbutton" type="submit">Submit</button>
     </form>
-</div>
-
 {% if error %}
     <div class="error">{{ error }}</div>
 {% endif %}
+
+</div>
+
+
 
 </body>
 </html>
