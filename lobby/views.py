@@ -8,7 +8,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View, generic
 from django.http import HttpResponse
-from celery import Celery, shared_task, result
 
 from lobby.models import Lobby, Participant
 from WerewolfWeb.settings import GAME_STATUS, GAME_ROLES
