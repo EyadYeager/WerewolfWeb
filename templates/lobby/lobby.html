@@ -3,7 +3,72 @@
 <head>
     <style>
         body {
-            font-size: 25px;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #333;
+            background-color: black;
+            margin: 20px;
+            padding: 20px;
+        }
+
+
+
+        h1{
+            font-family: Algerian;
+        }
+
+        h1, p {
+            color: #0275d8; /* A nice, soft blue */
+            text-align: center;
+        }
+
+        .container {
+         position: relative;
+        bottom: 155px;
+        }
+        
+         
+        
+        a {
+            color: #5bc0de;
+            text-decoration: none;
+            padding: 5px 10px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background-color: #0275d8;
+            color: white;
+            margin-right: 5px;
+        }
+
+        a:hover {
+            background-color: #025aa5;
+            border-color: #01549b;
+        }
+
+        ol {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            list-style-type: decimal;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .alert {
+            padding: 20px;
+            background-color: #f44336; /* Red */
+            color: white;
+            margin-bottom: 15px;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin: 5px;
+                padding: 5px;
+            }
         }
     </style>
     <meta charset="UTF-8">
@@ -11,17 +76,18 @@
 </head>
 <body>
 <h1>Lobby: {{ lobby.lobby_name }}</h1>
-<p>Max players: {{ lobby.max_players }} - status: {{ lobby.get_game_status_display }}</p>
-<a href="/lobby/">All lobbies</a>
+<p>Max players: {{ lobby.max_players }}</p>
+<p>Status: {{ lobby.get_game_status_display }}</p>
+<div class="container"><a href="/lobby/">Go back</a></div>
 <ol>
     {#{{ user }}#}
     {% for p in lobby.participants.all %}
         <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobby.lobbyid }}/join/">Join game!</a>
-<a href="/lobby/{{ lobby.lobbyid }}/leave/">leave all games</a>
-<a href="/lobby/{{ lobby.lobbyid }}/gamestart/">Start game</a>
+<a href="/lobby/{{ lobby.lobbyid }}/gamestart/" class="btn">Start game</a>
+<a href="/lobby/{{ lobby.lobbyid }}/leave/" class="btn">Leave all games</a>
+<a href="/lobby/{{ lobby.lobbyid }}/join/" class="btn">Join game!</a>
 
 {% if id == 0 %}
     <div class="alert alert-error">

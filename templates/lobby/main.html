@@ -2,30 +2,95 @@
 <html lang="en">
 <head>
     <style>
-
         * {
-            font-family: Arial;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Algerian;
+
         }
 
         body {
-            font-size: 25px;
-
+            font-size: 16px;
+            margin: 20px;
+            background-color: #383836;
+            color: #333;
         }
 
-        .fonts {
-            font-size: 25px;
+        h1 {
+            margin-bottom: 20px;
+            position: relative;
+            color: #0056b2;
+            background-color: #dbdad7;
+            text-align: center;
         }
 
         .button-logout {
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
 
+        .button-logout:hover {
+            background-color: #0056b3;
         }
 
         .container {
             display: flex;
-            justify-items: end;
-            place-content: end;
-            place-items: end;
+            justify-content: flex-end; /* Align items to the right */
+            margin-bottom: 20px;
         }
+
+         ol {
+            background-color: #dbdad7;
+            padding: 20px;
+            border-radius: 5px;
+            list-style-position: inside;
+        }
+
+        li {
+            display: flex;
+            justify-content: space-between; /* This will space out the lobby name and the status */
+            margin-bottom: 10px; /* Adds some space below each list item */
+        }
+
+        .status {
+            margin-left: auto; /* Pushes the status to the right */
+        }
+
+
+
+        a {
+            text-decoration: none;
+            color: #007bff;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .fonts, button.fonts {
+            font-size: 16px;
+            padding: 10px 20px;
+            background-color: #0056b3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            display: inline-block; /* Allows styling similar to a button */
+            margin: 10px 0; /* Adds some spacing around the link/button */
+        }
+
+        button.fonts:hover, .fonts:hover {
+            background-color: #218838;
+
+            }
+
 
     </style>
     <meta charset="UTF-8">
@@ -41,17 +106,16 @@
     </form>
 {% endif %}
 
-
-<h1>Current lobbies</h1>
+<h1>Current Lobbies</h1>
 <ol>
     {% for l in lobbies %}
-        <li><a href="/lobby/{{ l.lobbyid }}/">{{ l.lobby_name }} </a> status: {{ l.get_game_status_display }}</li>
+        <li>
+            <a href="/lobby/{{ l.lobbyid }}/">{{ l.lobby_name }}</a>
+            <span class="status"> {{ l.get_game_status_display }}</span>
+        </li>
     {% endfor %}
 </ol>
 
-
-<a class="fonts" href="/lobby/CreateLobby/">
-    <button class="fonts">Create a lobby</button>
-</a>
+<a class="fonts" href="/lobby/CreateLobby/">Create a lobby</a>
 </body>
 </html>
