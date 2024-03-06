@@ -1,48 +1,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>Create Lobby</title>
     <style>
-        * {
-            font-size: 50px;
-        }
-
-        .searchbar {
-            width: 100%;
-        }
-
-        .searchbutton {
-            align-self: center;
-            place-self: center;
-            width: 102.3%;
+        body {
+            font-family: Arial, sans-serif; /* Use a more standard font for web */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center; /* Center content horizontally */
+            align-items: center; /* Center content vertically */
+            height: 100vh; /* Full viewport height */
+            background-color: black; /* Light grey background for contrast */
         }
 
         .box {
-            display: grid;
-            margin: 20px auto;
-            width: 100%;
-            max-width: 350px;
-            height: 40px;
-            text-align: center;
-            justify-content: center;
-            justify-items: center;
+            display: flex;
+            flex-direction: column; /* Stack children vertically */
+            align-items: center; /* Center items horizontally */
+            gap: 20px; /* Add space between elements */
+            padding: 20px;
+            background-color: white; /* Background color for the form area */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+            border-radius: 8px; /* Rounded corners for the form area */
+        }
+
+        .box a {
+            font-size: 24px; /* Reasonable font size for the prompt */
+            color: #0056b3; /* Darker text for readability */
+            text-decoration: none; /* No underlining */
+            font-family: Algerian;
+        }
+
+        input[type="text"] {
+            width: 100%; /* Full width of its container */
+            max-width: 320px; /* Maximum width to maintain form factor */
+            padding: 10px;
+            font-size: 18px; /* Larger font size for readability */
+            border: 1px solid #ccc; /* Subtle border */
+            border-radius: 4px; /* Matched rounded corners */
+            box-sizing: border-box; /* Include padding and border in element's size */
+        }
+
+        .searchbutton {
+            padding: 10px 20px;
+            font-size: 18px; /* Larger text within the button for readability */
+            color: white;
+            background-color: #007bff; /* Bootstrap primary button color */
+            border: none;
+            border-radius: 4px; /* Rounded corners for the button */
+            cursor: pointer; /* Change cursor to indicate interactiveness */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Consistent shadow */
+            width: 94%;
+            margin: 8px 0;
+
+        }
+
+        .searchbutton:hover {
+            background-color: #0056b3; /* Darken button on hover for feedback */
+        }
+
+        /* Error message styling */
+        .error {
+            color: #ff0000; /* Red color for errors */
         }
     </style>
-    <meta charset="UTF-8">
-    <title>CreateLobby</title>
 </head>
 <body>
 
-<div class="searchbar">
-    <div class="box">
-        <a> Enter a name for the lobby</a>
-        <form method="post" action="/lobby/CreateLobby/">
-            {% csrf_token %}
-            <input class="searchbar" type="text" name='name'>
-            <button class="searchbutton" type="submit">Submit</button>
-        </form>
-    </div>
+<div class="box">
+    <a>Enter a name for the lobby</a>
+    <form method="post" action="/lobby/CreateLobby/">
+        {% csrf_token %}
+        <input class="searchbar" type="text" name="name" placeholder="Lobby Name">
+        <button class="searchbutton" type="submit">Submit</button>
+    </form>
+{% if error %}
+    <div class="error">{{ error }}</div>
+{% endif %}
+
 </div>
-<br><br><br><br>
-<a>{{ error }}</a>
+
+
+
 </body>
 </html>
