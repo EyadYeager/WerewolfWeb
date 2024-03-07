@@ -70,6 +70,16 @@
                 padding: 5px;
             }
         }
+        .btn{
+            position: fixed;
+            bottom: 0px;
+            right: 0px;
+            z-index: 998;
+            padding: 40px;
+            font-size: larger;
+
+
+        }
     </style>
     <meta charset="UTF-8">
     <title>Lobby - {{ lobby.lobby_name }}</title>
@@ -85,9 +95,9 @@
         <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
+<a href="/lobby/{{ lobby.lobbyId }}/join/" >Join game!</a>
+<a href="/lobby/{{ lobby.lobbyId }}/leave/" >Leave all games</a>
 <a href="/lobby/{{ lobby.lobbyId }}/gamestart/" class="btn">Start game</a>
-<a href="/lobby/{{ lobby.lobbyId }}/leave/" class="btn">Leave all games</a>
-<a href="/lobby/{{ lobby.lobbyId }}/join/" class="btn">Join game!</a>
 
 {% if id == 0 %}
     <div class="alert alert-error">
