@@ -85,9 +85,9 @@
         <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobby.lobbyid }}/gamestart/" class="btn">Start game</a>
-<a href="/lobby/{{ lobby.lobbyid }}/leave/" class="btn">Leave all games</a>
-<a href="/lobby/{{ lobby.lobbyid }}/join/" class="btn">Join game!</a>
+<a href="/lobby/{{ lobby.lobbyId }}/gamestart/" class="btn">Start game</a>
+<a href="/lobby/{{ lobby.lobbyId }}/leave/" class="btn">Leave all games</a>
+<a href="/lobby/{{ lobby.lobbyId }}/join/" class="btn">Join game!</a>
 
 {% if id == 0 %}
     <div class="alert alert-error">

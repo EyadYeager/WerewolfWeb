@@ -110,7 +110,7 @@
 <ol>
     {% for l in lobbies %}
         <li>
-            <a href="/lobby/{{ l.lobbyid }}/">{{ l.lobby_name }}</a>
+            <a href="/lobby/{{ l.lobbyId }}/">{{ l.lobby_name }}</a>
             <span class="status"> {{ l.get_game_status_display }}</span>
         </li>
     {% endfor %}
