@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from django.core.validators import MaxValueValidator
 from WerewolfWeb.settings import GAME_STATUS, GAME_CYCLE, GAME_ROLES
 
 
@@ -18,7 +18,7 @@ class Lobby(models.Model):
     game_admin = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     game_status = models.IntegerField(choices=GAME_STATUS)
     game_cycle = models.IntegerField(choices=GAME_CYCLE, default=0)
-    max_players = models.IntegerField()
+    max_players = models.IntegerField(validators=[MaxValueValidator(10)])
 
     # def __str__(self):
     #     return f'{self.lobbyid} - max: {self.max_players} - players: {self.players.count()}'

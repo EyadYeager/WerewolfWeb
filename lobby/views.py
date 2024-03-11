@@ -33,14 +33,6 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-        you = Participant.objects.get(userId=request.user.id)
-        you.voted = False
-        you.role = 0
-        you.vote_count = 0
-        you.save()
-        print(you.vote_count)
-        print(you.voted)
-        print(you.role)
 
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
@@ -88,8 +80,9 @@ class LobbyCreateView(View):
     def post(self, request):
         name = request.POST.get('name', "Lobby with no name")
 
-        if len(name) < 3:
-            return render(request, 'lobby/CreateLobby.html', {"error": "Name should be longer than 2 characters"})
+        if len(name) < 3 or len(name) > 20:
+            return render(request, 'lobby/CreateLobby.html',
+                          {"error": "Name should be between 3 to 20 characters long"})
         Lobby.objects.create(lobby_name=name, max_players=10, game_admin=request.user, game_status=0)
         return redirect(f'/lobby/')
 
@@ -142,16 +135,15 @@ class GameStart(View):
             print(p.userId.username, p.role, p.voted, p.vote_count)
 
         you = Participant.objects.get(userId=request.user.id)
-        if lobbyid.game_status == 0:
-            if you.role == 0:
-                role_alert = 0
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
-            if you.role == 1:
-                role_alert = 1
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
-            if you.role == 2:
-                role_alert = 2
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+        if you.role == 0:
+            role_alert = 0
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+        if you.role == 1:
+            role_alert = 1
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+        if you.role == 2:
+            role_alert = 2
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
 
         return render(request, 'lobby/GameStartDay.html',
                       {'lobbyid': lobbyid, "werewolfs": werewolfs, "doctors": doctors, "citizens": citizens})
@@ -166,7 +158,7 @@ class DayView(View):
         # Participant.userId = request.user.id
         # print(request.GET['userid'])
         if "userid" in request.GET:
-            current_participant_id = int(request.GET['userid'])
+            current_participant_id += int(request.GET['userid'])
 
         # participant object (you)
         you = Participant.objects.get(userId=request.user.id)
@@ -177,11 +169,6 @@ class DayView(View):
             return render(request, 'lobby/alert.html', {'in_game_alert': in_game_alert, 'lobbyid': lobbyid,
                                                         'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
 
-        if you.voted:
-            in_game_alert = 0
-            # render a page that redirects the user away, with message, you already have voted
-            return render(request, 'lobby/alert.html', {'in_game_alert': in_game_alert, 'lobbyid': lobbyid,
-                                                        'funnybutton': "<input type=\"button\">this is a funny button<\input>"})
         you.voted = True
         you.save()
         # participant object (suspect)
@@ -205,7 +192,6 @@ class DayView(View):
 
                 lobbyid.game_cycle = 1
                 lobbyid.save()
-
 
                 killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
                 townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
