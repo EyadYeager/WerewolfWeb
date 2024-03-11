@@ -6,7 +6,7 @@
 <body>
 {% if killers.count >= townspeople %}
     <h1>Werewolfs won</h1>    <br>
-    <p>The Werewolf were:</p>
+    <p>The Werewolf(s) were:</p>
 
     <ol>
         {% for k in killers %}
@@ -18,7 +18,7 @@
 
 {% if killers.count < 1 %}
     <h1>Townspeople won</h1>    <br>
-    <p>The Werewolf were:</p>
+    <p>The Werewolf(s) were:</p>
     <ol>
 
         {% for k in killers %}

@@ -84,19 +84,21 @@
         <form method="post">
             {% csrf_token %}
             {{ form.as_p }}
+            <button type="submit" class="registerbtn">SignUp</button>
+        
         </form>
-
+            <p>Already have an account? <a href="/accounts/login/">Login</a>.</p>
     {% endblock %}
 
     <hr>
     <p>By creating an account you agree to sell your soul to us. <a href="https://www.youtube.com/watch?v=d1YBv2mWll0">here
         is a present for you</a>.</p>
 
-    <button type="submit" class="registerbtn">SignUp</button>
+
 </div>
 
 <div class="container signin">
-    <p>Already have an account? <a href="/accounts/login/">Login</a>.</p>
+
 </div>
 </body>
 </html>

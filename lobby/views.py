@@ -1,5 +1,3 @@
-import asyncio
-import random
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -207,8 +205,8 @@ class DayView(View):
 
                 lobbyid.game_cycle = 1
                 lobbyid.save()
-                print(soon_to_be_dead_participant.role)
-                print(soon_to_be_dead_participant.userId.username)
+
+
                 killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
                 townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
                 if killers.count() < 1 or killers.count() >= townspeople:
