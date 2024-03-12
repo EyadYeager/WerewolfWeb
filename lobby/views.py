@@ -39,18 +39,24 @@ class MainLobbyView(View):
 
 class LobbyJoinView(View):
     def get(self, request, id):
-
-        participants_count = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
+        lobby = Lobby.objects.get(lobbyId=id)
+        participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
+        participants_count = Participant.objects.filter(lobbyId=lobby).count()
         # print(request.user)
         try:
-            lobby = Lobby.objects.get(lobbyId=id)
 
-            if participants_count > 0:
+            if participant_check > 0:
                 alert = 4
                 return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
 
+            elif participants_count > 10:
+                alert = 0
+                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+
             else:
-                participant = Participant(userId=request.user, lobbyId=lobby, role=0, vote_count=0)
+                participant = Participant(userId=request.user, lobbyId=lobby, role=0, vote_count=0, voted=False)
+                lobby.game_status = 0
+                lobby.save()
                 participant.save()
 
         except Lobby.DoesNotExist:
@@ -102,22 +108,15 @@ class GameStart(View):
         if lobbyid.game_status == 0:
             lobbyid.game_status = 1
             lobbyid.save()
-            everyone = Participant.objects.filter(lobbyId=lobbyid)
-            everyone.vote_count = 0
-            everyone.voted = False
-            everyone.role = 0
-            everyone.save()
+            # everyone = Participant.objects.filter(lobbyId=lobbyid)
+            # everyone.vote_count = 0
+            # everyone.voted = False
+            # everyone.role = 0
+            # everyone.save()
         participants = Participant.objects.filter(lobbyId=lobbyid)
         for p in participants:
             p.role = 0
             p.save()
-        # participant_count = participants.objects.count(lobbyId=lobbyid,)
-        # create a werewolf
-        # if 3 < participant_count < 7:
-        #     the_list = list(Participant.objects.all(lobbyid=lobbyid, userId=id))
-        #     random_participant = random.choice(the_list)
-        #     random_participant.role = 1
-        #     random_participant.save()
 
         # this code is for giving roles
         role_counter = 0
@@ -132,12 +131,12 @@ class GameStart(View):
         werewolfs = Participant.objects.filter(lobbyId=lobbyid, role=1)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
         for p in Participant.objects.filter(lobbyId=lobbyid):
-            print(p.userId.username, p.role, p.voted, p.vote_count)
+            print(p.userId.username,p.userId.id, p.role, p.voted, p.vote_count)
 
         you = Participant.objects.get(userId=request.user.id)
         if you.role == 0:
             role_alert = 0
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you":you})
         if you.role == 1:
             role_alert = 1
             return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
@@ -152,13 +151,15 @@ class GameStart(View):
 class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        current_participant_id = -1
+        current_participant_id = 0
         killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
-
+        me = Participant.objects.filter(userId=10)
+        men = Participant.objects.get(lobbyId=lobbyid)
         # Participant.userId = request.user.id
-        # print(request.GET['userid'])
+        print(request.GET['userid'])
         if "userid" in request.GET:
             current_participant_id += int(request.GET['userid'])
+        print(men.userId.id)
 
         # participant object (you)
         you = Participant.objects.get(userId=request.user.id)
@@ -172,6 +173,7 @@ class DayView(View):
         you.voted = True
         you.save()
         # participant object (suspect)
+        print(current_participant_id)
         current_participant = Participant.objects.get(userId=current_participant_id)
         # change the voted status after nighttime
         current_participant.vote_count += 1
@@ -200,6 +202,7 @@ class DayView(View):
 
                 return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant})
+
 
         return render(request, 'lobby/GameStartDay.html',
                       {'lobbyid': lobbyid})

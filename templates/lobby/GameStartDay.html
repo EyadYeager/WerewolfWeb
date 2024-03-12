@@ -18,7 +18,7 @@
                     <li>{{ p.userId.username }}
                         <form method="get"
                               action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input type="submit"
+                            <input type="hidden" name="userid" value= {{ p.userId.id}}><input type="submit"
                                                                                                value="Vote">
                         </form>
                     </li>
