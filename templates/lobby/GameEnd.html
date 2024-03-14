@@ -4,7 +4,7 @@
     <title>The End</title>
 </head>
 <body>
-{% if killers.count >= townspeople %}
+{% if killers >= townspeople %}
     <h1>Werewolfs won</h1>    <br>
     <p>The Werewolves were:</p>
 
@@ -15,7 +15,7 @@
         <br>
     </ol>
 {% else %}
-    
+
     <h1>Townspeople won</h1>    <br>
     <p>The Werewolves were:</p>
     <ol>

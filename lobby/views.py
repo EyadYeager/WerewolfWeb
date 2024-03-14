@@ -206,12 +206,12 @@ class DayView(View):
                     lobbyid.game_cycle = 1
                     lobbyid.save()
 
-                    killers = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False)
+                    killers = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
                     townspeople = Participant.objects.filter(lobbyId=lobbyid, dead=False, role__in=[0, 2]).count()
+                    werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
                     if killers.count() < 1 or killers.count() >= townspeople:
                         lobbyid.game_cycle = 2
                         lobbyid.save()
-                        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
                         return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
 
                     return render(request, 'lobby/GameStartDay.html',
@@ -251,12 +251,12 @@ class NightView(View):
                     p.rescued = 0
                     p.save()
 
-            killers = Participant.objects.filter(lobbyId=lobbyid, role=1,dead=False)
+            killers = Participant.objects.filter(lobbyId=lobbyid, role=1,dead=False).count()
             townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2], dead=False).count()
+            werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
             if killers.count() < 1 or killers.count() >= townspeople:
                 lobbyid.game_cycle = 2
                 lobbyid.save()
-                werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
                 return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
         dead_participants = Participant.objects.filter(lobbyId=lobbyid, dead=True)
 
@@ -270,9 +270,9 @@ class NightView(View):
 class EndView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
+        killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
-        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
         return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
 
 
