@@ -6,22 +6,25 @@
     <style>
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background-color: black;
+            background-color: #18544f;
             display: flex;
             justify-content: center; /* Center the form container horizontally */
             padding-top: 40px; /* Add some space on the top */
+            color: ghostwhite;
         }
 
         * {
             box-sizing: border-box;
+
         }
 
         .container {
             width: 25%; /* Set the width of the container to 25% */
-            padding: 16px;
-            background-color: lightgrey;
-            /* Ensure it doesn't become too narrow on small screens */
-            min-width: 300px;
+            background-color: #18544f;
+            border: 2px solid black;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
         }
 
         input[type=text], input[type=password], input[type=submit] {
@@ -30,11 +33,11 @@
             margin: 5px 0 22px 0; /* Add some space between the inputs */
             display: block; /* Ensure they are displayed as block elements */
             border: none;
-            background: #f1f1f1;
+            background: ghostwhite;
         }
 
         input[type=text]:focus, input[type=password]:focus {
-            background-color: #f1f1f1;
+            background-color: ghostwhite;
             outline: none;
         }
 
@@ -44,7 +47,7 @@
         }
 
         .registerbtn {
-            background-color: #28a745;
+            background-color: #775baf;
             color: white;
             padding: 16px 20px;
             margin: 8px 0;
@@ -56,16 +59,16 @@
 
         .registerbtn:hover {
             opacity: 1;
+            background-color: #6d4fa8; /* Darken button on hover for feedback */
+
         }
+
 
         a {
             color: dodgerblue;
         }
 
-        .signin {
-            background-color: #f1f1f1;
-            text-align: center;
-        }
+
     </style>
     <title>Login</title>
 </head>
