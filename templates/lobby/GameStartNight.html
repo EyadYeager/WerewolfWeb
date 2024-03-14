@@ -58,7 +58,7 @@
 
         }
 
-        .username-card-container {
+                .username-card-container {
             width: 14rem;
             height: 6rem;
             background-color: #775baf;
@@ -81,8 +81,8 @@
 <a href="/lobby/">Go to the lobby</a>
 
 <h1>It is nighttime</h1><br>
-<div class="username_box">
 
+<div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.role != 3 %}
             <div class="username-card-container">
@@ -106,18 +106,19 @@
                     </form>
 
                 {% endif %}
-
+            </div>
         {% endif %}
     {% endfor %}
     </div>
+<br>
     {% for participant in dead_participants %}
 
-        <li>{{ participant.userId.username }} is dead</li>
+        <ul>{{ participant.userId.username }} is dead</ul>
 
     {% endfor %}
 
     <script async>
-        async function JavaSucks() {
+        async function JavascriptSucks() {
             const lobby_id = "{{ lobbyid.lobbyId }}";
             const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
             const gamecycle = await response.text();
@@ -126,7 +127,7 @@
             }
         }
 
-        setInterval(JavaSucks, 3000)
+        setInterval(JavascriptSucks, 3000)
 
     </script>
 </body>

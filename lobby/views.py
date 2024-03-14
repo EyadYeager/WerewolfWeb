@@ -51,7 +51,7 @@ class LobbyJoinView(View):
                 alert = 4
                 return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
 
-            elif participants_count > 10:
+            elif participants_count > 16:
                 alert = 0
                 return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
 
@@ -91,20 +91,17 @@ class LobbyCreateView(View):
         if len(name) < 3 or len(name) > 20:
             return render(request, 'lobby/CreateLobby.html',
                           {"error": "Name should be between 3 to 20 characters long"})
-        Lobby.objects.create(lobby_name=name, max_players=10, game_admin=request.user, game_status=0)
+        Lobby.objects.create(lobby_name=name, max_players=16, game_admin=request.user, game_status=0)
         return redirect(f'/lobby/')
 
 
 class GameStart(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        player_count = lobbyid.participants.count()
-        # if player_count < 3:
+        # player_count = lobbyid.participants.count()
+        # if player_count < 4:
         #     alert = 1
         #     return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
-        # you = Participant.objects.get(userId=request.user.id)
-        # you.voted
-        # you.save()
         lobbyid.game_cycle = 0
         lobbyid.save()
         if lobbyid.game_status == 0:
@@ -178,21 +175,25 @@ class DayView(View):
         you.voted = True
         you.save()
         # participant object (suspect)
+        print("Current_participant_id")
         print(current_participant_id)
         current_participant = Participant.objects.get(userId=current_participant_id)
         # change the voted status after nighttime
         current_participant.vote_count += 1
+        print("current_participant.vote_count")
         print(current_participant.vote_count)
         current_participant.save()
-        maxcount = Participant.objects.aggregate(Max("vote_count"))
+        maxcount = Participant.objects.filter(lobbyId=lobbyid).aggregate(Max("vote_count"))
 
-        # check_voting = Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3)
         # check if everyone voted
         if Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3).count() == 0:
 
             voted_participants = Participant.objects.filter(lobbyId=lobbyid, vote_count=maxcount['vote_count__max'] )
             # checks if there is only one participant with the most votes
+            print(voted_participants.count())
+            print(maxcount)
             if voted_participants.count() == 1:
+                print("work plz")
                 soon_to_be_dead_participant = voted_participants[0]
                 soon_to_be_dead_participant.role = 3
                 soon_to_be_dead_participant.save()
