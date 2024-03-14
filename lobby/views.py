@@ -214,15 +214,18 @@ class DayView(View):
 
 class NightView(View):
     def get(self, request, id):
+        you = Participant.objects.get(userId=request.user.id)
         lobbyid = Lobby.objects.get(lobbyId=id)
         if "action" in request.GET:
             current_participant_id = int(request.GET['userid'])
             action_id = str(request.GET['action'])
             current_participant = Participant.objects.get(userId=current_participant_id)
             if action_id == "killed":
-                current_participant.killed += 1
+                if you.role == 1:
+                    current_participant.killed += 1
             else:
-                current_participant.rescued += 1
+                if you.role == 2:
+                    current_participant.rescued += 1
             current_participant.save()
             counting_killed = Participant.objects.filter(lobbyId=lobbyid, killed__gt=0).aggregate(Sum('killed'))[
                                   "killed__sum"] or 0
