@@ -134,7 +134,8 @@ GAME_ROLES = (
 
 GAME_CYCLE = (
     (0, 'Day'),
-    (1, 'Night')
+    (1, 'Night'),
+    (2, 'End')
 )
 
 LOGIN_REDIRECT_URL = '/'

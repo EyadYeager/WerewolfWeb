@@ -58,7 +58,7 @@
 
         }
 
-                .username-card-container {
+        .username-card-container {
             width: 14rem;
             height: 6rem;
             background-color: #775baf;
@@ -68,10 +68,12 @@
             box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
             margin: 5px; /* Adjust the margin as per your requirement */
         }
-        .kill_button{
+
+        .kill_button {
             color: red;
         }
-        .rescue_button{
+
+        .rescue_button {
             color: #13b613;
         }
 
@@ -84,51 +86,55 @@
 
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
-        {% if p.role != 3 %}
+        {% if p.dead == False %}
             <div class="username-card-container">
-            <p class="username">{{ p.userId.username }}
+                <p class="username">{{ p.userId.username }}
 
-                {% if you.role == 1 %}
+                    {% if you.role == 1 %}
 
-                    <form method="get"
-                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                        <input class="kill_button" type="hidden" name="action" value="killed">
-                        <input class="button" type="submit" value="KILL">
-                    </form>
-                {% elif you.role == 2 %}
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                            <input class="kill_button" type="hidden" name="action" value="killed">
+                            <input class="button" type="submit" value="KILL">
+                        </form>
+                    {% elif you.role == 2 %}
 
-                    <form method="get"
-                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                        <input class="rescue_button" type="hidden" name="action" value="rescued">
-                        <input class="button" type="submit" value="Rescue">
-                    </form>
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                            <input class="rescue_button" type="hidden" name="action" value="rescued">
+                            <input class="button" type="submit" value="Rescue">
+                        </form>
 
-                {% endif %}
+                    {% endif %}
             </div>
         {% endif %}
     {% endfor %}
-    </div>
+</div>
 <br>
-    {% for participant in dead_participants %}
+{% for participant in dead_participants %}
 
-        <ul>{{ participant.userId.username }} is dead</ul>
+    <ul>{{ participant.userId.username }} is dead</ul>
 
-    {% endfor %}
+{% endfor %}
 
-    <script async>
-        async function JavascriptSucks() {
-            const lobby_id = "{{ lobbyid.lobbyId }}";
-            const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
-            const gamecycle = await response.text();
-            if (gamecycle == 0) {
-                window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
-            }
+<script async>
+    async function JavascriptSucks() {
+        const lobby_id = "{{ lobbyid.lobbyId }}";
+        const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+        const gamecycle = await response.text();
+        if (gamecycle == 0) {
+            window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
+        }
+        if (gamecycle == 2) {
+            window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/end/"
         }
 
-        setInterval(JavascriptSucks, 3000)
+    }
 
-    </script>
+    setInterval(JavascriptSucks, 3000)
+
+</script>
 </body>
 </html>

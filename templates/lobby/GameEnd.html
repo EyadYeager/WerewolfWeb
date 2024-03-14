@@ -6,22 +6,21 @@
 <body>
 {% if killers.count >= townspeople %}
     <h1>Werewolfs won</h1>    <br>
-    <p>The Werewolf(s) were:</p>
+    <p>The Werewolves were:</p>
 
     <ol>
-        {% for k in killers %}
+        {% for k in werewolves %}
             <li>{{ k.userId.username }}</li>
         {% endfor %}
         <br>
     </ol>
-{% endif %}
-
-{% if killers.count < 1 %}
+{% else %}
+    
     <h1>Townspeople won</h1>    <br>
-    <p>The Werewolf(s) were:</p>
+    <p>The Werewolves were:</p>
     <ol>
 
-        {% for k in killers %}
+        {% for k in werewolves %}
             <li>{{ k.userId.username }}</li>
         {% endfor %}
         <br>

@@ -35,5 +35,6 @@ urlpatterns = [
     path('lobby/<int:id>/gamestart/day/', DayView.as_view(), name='day'),
     path('lobby/<int:id>/gamestart/night/', NightView.as_view(), name='night'),
     path('lobby/<int:id>/gamestart/check/', CheckCycleView.as_view(), name='check'),
+    path('lobby/<int:id>/gamestart/end/', EndView.as_view(), name='end'),
 
 ]

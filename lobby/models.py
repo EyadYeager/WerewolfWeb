@@ -18,7 +18,7 @@ class Lobby(models.Model):
     game_admin = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     game_status = models.IntegerField(choices=GAME_STATUS)
     game_cycle = models.IntegerField(choices=GAME_CYCLE, default=0)
-    max_players = models.IntegerField(validators=[MaxValueValidator(10)])
+    max_players = models.IntegerField(validators=[MaxValueValidator(16)])
 
     # def __str__(self):
     #     return f'{self.lobbyid} - max: {self.max_players} - players: {self.players.count()}'
@@ -32,6 +32,8 @@ class Participant(models.Model):
     voted = models.BooleanField(default=False)
     killed = models.IntegerField(default=0)
     rescued = models.IntegerField(default=0)
+    dead = models.BooleanField(default=False)
+
 
 
 # class GameCycle(models.Model):
