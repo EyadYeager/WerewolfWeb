@@ -2,57 +2,132 @@
 <html lang="en">
 <head>
     <title>Night</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213053374526922812/DALLE_2024-03-01_10.20.39_-_A_serene_nighttime_landscape_featuring_a_sky_filled_with_twinkling_stars_and_a_bright_full_moon_casting_a_gentle_glow_over_the_scene._The_atmosphere_s.webp?ex=65fd4d7d&is=65ead87d&hm=8e0ce59ac838c0f013df82f19b77731a4ff577690c798533dd1a820e38243730&=&format=webp&width=720&height=411");
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #333;
+            text-align: center; /* Center align the content */
+            padding-top: 50px; /* Add some space on the top */
+        }
+
+        h1 {
+            color: #775baf;
+            font-family: Algerian;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #775baf;
+            color: ghostwhite;
+            padding: 10px 20px;
+            margin: 10px 0; /* Add some margin to separate the links */
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+
+        a:hover {
+            background-color: #775baf; /* Darken the button upon hover */
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #775baf;
+            color: ghostwhite;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+
+        .username_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* To wrap the player cards */
+        }
+
+        .username {
+            font-size: 24px;
+            color: ghostwhite;
+
+        }
+
+        .username-card-container {
+            width: 14rem;
+            height: 6rem;
+            background-color: #775baf;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
+            margin: 5px; /* Adjust the margin as per your requirement */
+        }
+        .kill_button{
+            color: red;
+        }
+        .rescue_button{
+            color: #13b613;
+        }
+
+    </style>
 </head>
 <body>
+<a href="/lobby/">Go to the lobby</a>
+
 <h1>It is nighttime</h1><br>
-<ol>
+<div class="username_box">
 
     {% for p in lobbyid.participants.all %}
         {% if p.role != 3 %}
-            <li>{{ p.userId.username }}
+            <div class="username-card-container">
+            <p class="username">{{ p.userId.username }}
 
                 {% if you.role == 1 %}
 
                     <form method="get"
                           action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
                         <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                        <input type="hidden" name="action" value="killed">
-                        <input type="submit" value="KILL">
+                        <input class="kill_button" type="hidden" name="action" value="killed">
+                        <input class="button" type="submit" value="KILL">
                     </form>
                 {% elif you.role == 2 %}
 
                     <form method="get"
                           action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
                         <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                        <input type="hidden" name="action" value="rescued">
-                        <input type="submit" value="Rescue">
+                        <input class="rescue_button" type="hidden" name="action" value="rescued">
+                        <input class="button" type="submit" value="Rescue">
                     </form>
 
                 {% endif %}
 
-            </li>
         {% endif %}
     {% endfor %}
-    <ol>
-        {% for participant in dead_participants %}
+    </div>
+    {% for participant in dead_participants %}
 
-            <li>{{ participant.userId.username }} is dead</li>
+        <li>{{ participant.userId.username }} is dead</li>
 
-        {% endfor %}
-    </ol>
-</ol>
-<script async>
-    async function JavaSucks() {
-        const lobby_id = "{{ lobbyid.lobbyId }}";
-        const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
-        const gamecycle = await response.text();
-        if (gamecycle == 0) {
-            window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
+    {% endfor %}
+
+    <script async>
+        async function JavaSucks() {
+            const lobby_id = "{{ lobbyid.lobbyId }}";
+            const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+            const gamecycle = await response.text();
+            if (gamecycle == 0) {
+                window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/"
+            }
         }
-    }
 
-    setInterval(JavaSucks, 3000)
+        setInterval(JavaSucks, 3000)
 
-</script>
+    </script>
 </body>
 </html>

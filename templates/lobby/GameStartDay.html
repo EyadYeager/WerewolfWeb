@@ -1,37 +1,107 @@
 <html lang="en">
 <head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213060756380327977/file-r5VL7keOz6n0cskX8qhzP4rk.png?ex=65fd545d&is=65eadf5d&hm=046fa9d0f62bb5fed37de3d12f320e48942520a084252a9f7c455defd0879cd0&=&format=webp&quality=lossless&width=720&height=411");
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #333;
+            text-align: center; /* Center align the content */
+            font-size: 20px;
 
+        }
+
+        h1 {
+            color: #775baf;
+            font-family: Algerian;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #775baf;
+            color: ghostwhite;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+
+        a:hover {
+            background-color: #775baf; /* Darken the button upon hover */
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #a156fc;
+            color: ghostwhite;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+
+        .username_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* To wrap the player cards */
+        }
+
+        .username {
+            font-size: 24px;
+            color: ghostwhite;
+
+        }
+
+        .username-card-container {
+            width: 14rem;
+            height: 6rem;
+            background-color: #775baf;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
+            margin: 5px; /* Adjust the margin as per your requirement */
+        }
+
+    </style>
     <title>Werewolf</title></head>
 <body>
 
-
+<a href="/lobby/">Go back to lobby</a>
 
 <div id="game-players">
     <div class="players-list">
     </div>
-    <a>It is day time</a><br>
+    <h1>It is day time</h1><br>
     <div class="player-info">
-        <div>
+        <div class="username_box">
 
-            <ol>
-                {% for p in lobbyid.participants.all %}
-                    <li>{{ p.userId.username }}
-                        <form method="get"
-                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ p.userId.id}}><input type="submit"
-                                                                                               value="Vote">
-                        </form>
-                    </li>
 
-                {% endfor %}
-            </ol>
-            {% if Dead_participant %}
-                <a>{{ Dead_participant.userId.username }} is dead </a>
-            {% endif %}
+            {% for p in lobbyid.participants.all %}
+                <div class="username-card-container">
+                    <p class="username">{{ p.userId.username }}</p>
+                    <form method="get"
+                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
+                        <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button" type="submit"
+                                                                                           value="Vote">
+                    </form>
+                </div>
+                <br>
+
+            {% endfor %}
+
         </div>
+        {% if Dead_participant %}
+            <a>{{ Dead_participant.userId.username }} is dead </a>
+        {% endif %}
+
 
         <script async>
-            async function JavaSucks() {
+            async function JavascriptSucks() {
                 const lobby_id = "{{ lobbyid.lobbyId }}";
                 const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
                 const gamecycle = await response.text();
@@ -40,7 +110,7 @@
                 }
             }
 
-            setInterval(JavaSucks, 3000)
+            setInterval(JavascriptSucks, 3000)
 
         </script>
 

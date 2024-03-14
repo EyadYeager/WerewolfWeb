@@ -1,3 +1,5 @@
+import random
+
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -119,30 +121,35 @@ class GameStart(View):
             p.save()
 
         # this code is for giving roles
-        role_counter = 0
-        for i, participants in enumerate(participants, start=1):
-            if role_counter == 0 and i & 4 != 0:
-                participants.role = 0
+        participants_list = list(participants)
+        random.shuffle(participants_list)
+
+        # Assign roles within each group of 4 participants
+        for i, participant in enumerate(participants_list, start=1):
+            if i % 4 == 1:
+                participant.role = 1  # Assign role 1 for the first participant in every group of 4
+            elif i % 4 == 0:
+                participant.role = 2  # Assign role 2 for the last participant in every group of 4
             else:
-                participants.role = role_counter
-            participants.save()
-            role_counter = (role_counter + 1) % 3
+                participant.role = 0  # Assign role 0 for the rest of the participants
+            participant.save()
+
         citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         werewolfs = Participant.objects.filter(lobbyId=lobbyid, role=1)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
         for p in Participant.objects.filter(lobbyId=lobbyid):
-            print(p.userId.username,p.userId.id, p.role, p.voted, p.vote_count)
+            print(p.userId.username, p.userId.id, p.role, p.voted, p.vote_count)
 
         you = Participant.objects.get(userId=request.user.id)
         if you.role == 0:
             role_alert = 0
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you":you})
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
         if you.role == 1:
             role_alert = 1
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
         if you.role == 2:
             role_alert = 2
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid})
+            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
 
         return render(request, 'lobby/GameStartDay.html',
                       {'lobbyid': lobbyid, "werewolfs": werewolfs, "doctors": doctors, "citizens": citizens})
@@ -153,13 +160,11 @@ class DayView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         current_participant_id = 0
         killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
-        me = Participant.objects.filter(userId=10)
-        men = Participant.objects.get(lobbyId=lobbyid)
+
         # Participant.userId = request.user.id
-        print(request.GET['userid'])
+        # print(request.GET['userid'])
         if "userid" in request.GET:
             current_participant_id += int(request.GET['userid'])
-        print(men.userId.id)
 
         # participant object (you)
         you = Participant.objects.get(userId=request.user.id)
@@ -181,11 +186,11 @@ class DayView(View):
         current_participant.save()
         maxcount = Participant.objects.aggregate(Max("vote_count"))
 
-        check_voting = Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3)
+        # check_voting = Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3)
         # check if everyone voted
-        if check_voting.count() == 0:
+        if Participant.objects.filter(lobbyId=lobbyid, voted=False).exclude(role=3).count() == 0:
 
-            voted_participants = Participant.objects.filter(vote_count=maxcount['vote_count__max'], lobbyId=lobbyid)
+            voted_participants = Participant.objects.filter(lobbyId=lobbyid, vote_count=maxcount['vote_count__max'] )
             # checks if there is only one participant with the most votes
             if voted_participants.count() == 1:
                 soon_to_be_dead_participant = voted_participants[0]
@@ -203,7 +208,6 @@ class DayView(View):
                 return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant})
 
-
         return render(request, 'lobby/GameStartDay.html',
                       {'lobbyid': lobbyid})
 
@@ -211,8 +215,6 @@ class DayView(View):
 class NightView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        # current_participant_id = -1
-        # action_id = -1
         if "action" in request.GET:
             current_participant_id = int(request.GET['userid'])
             action_id = str(request.GET['action'])
@@ -236,6 +238,7 @@ class NightView(View):
                     p.killed = 0
                     p.rescued = 0
                     p.save()
+
             killers = Participant.objects.filter(lobbyId=lobbyid, role=1)
             townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
             if killers.count() < 1 or killers.count() >= townspeople:
