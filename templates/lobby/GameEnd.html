@@ -1,64 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Algerian;
-        }
-
-        body {
-            font-size: 16px;
-            margin: 20px;
-            background-color: #18544f;
-            color: ghostwhite;
-        }
-
-        h1 {
-            margin-bottom: 20px;
-            color: ghostwhite;
-            background-color: #775baf;
-            text-align: center;
-        }
-
-        ol {
-            background-color: #775baf;
-            padding: 20px;
-            border-radius: 5px;
-            list-style-position: inside;
-            color: ghostwhite;
-        }
-
-        li {
-            margin-bottom: 10px; /* Adds some space below each list item */
-        }
-
-        .status {
-            margin-left: auto; /* For alignment, might not be used here but kept for consistency */
-        }
-    </style>
     <title>The End</title>
 </head>
 <body>
+{% if killers >= townspeople %}
+    <h1>Werewolfs won</h1>    <br>
+    <p>The Werewolves were:</p>
 
-{% if killers.count >= townspeople %}
-    <h1>Werewolves won</h1>
-    <p>The Werewolf(s) were:</p>
     <ol>
-        {% for k in killers %}
+        {% for k in werewolves %}
             <li>{{ k.userId.username }}</li>
         {% endfor %}
+        <br>
     </ol>
-{% elif killers.count < 1 %}
-    <h1>Townspeople won</h1>
-    <p>The Werewolf(s) were:</p>
+{% else %}
+
+    <h1>Townspeople won</h1>    <br>
+    <p>The Werewolves were:</p>
     <ol>
-        {% for k in killers %}
+
+        {% for k in werewolves %}
             <li>{{ k.userId.username }}</li>
         {% endfor %}
+        <br>
     </ol>
 {% endif %}
 
