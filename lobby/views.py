@@ -63,6 +63,32 @@ class LobbyJoinView(View):
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
+
+        for everyone in Participant.objects.filter(lobbyId=lobby):
+            everyone.vote_count = 0
+            everyone.voted = False
+            everyone.role = 0
+            everyone.dead = False
+            everyone.save()
+        participants = Participant.objects.filter(lobbyId=lobby)
+        for p in participants:
+            p.role = 0
+            p.save()
+
+        # this code is for giving roles
+        participants_list = list(participants)
+        random.shuffle(participants_list)
+
+        # Assign roles within each group of 4 participants
+        for i, participant in enumerate(participants_list, start=1):
+            if i % 4 == 1:
+                participant.role = 1  # Assign role 1 for the first participant in every group of 4
+            elif i % 4 == 0:
+                participant.role = 2  # Assign role 2 for the last participant in every group of 4
+            else:
+                participant.role = 0  # Assign role 0 for the rest of the participants
+            participant.save()
+
         return redirect(f'/lobby/{id}/')
 
 
@@ -107,30 +133,6 @@ class GameStart(View):
         if lobbyid.game_status == 0:
             lobbyid.game_status = 1
             lobbyid.save()
-        for everyone in Participant.objects.filter(lobbyId=lobbyid):
-            everyone.vote_count = 0
-            everyone.voted = False
-            everyone.role = 0
-            everyone.dead = False
-            everyone.save()
-        participants = Participant.objects.filter(lobbyId=lobbyid)
-        for p in participants:
-            p.role = 0
-            p.save()
-
-        # this code is for giving roles
-        participants_list = list(participants)
-        random.shuffle(participants_list)
-
-        # Assign roles within each group of 4 participants
-        for i, participant in enumerate(participants_list, start=1):
-            if i % 4 == 1:
-                participant.role = 1  # Assign role 1 for the first participant in every group of 4
-            elif i % 4 == 0:
-                participant.role = 2  # Assign role 2 for the last participant in every group of 4
-            else:
-                participant.role = 0  # Assign role 0 for the rest of the participants
-            participant.save()
 
         citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         werewolfs = Participant.objects.filter(lobbyId=lobbyid, role=1)
@@ -209,10 +211,16 @@ class DayView(View):
                     killers = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
                     townspeople = Participant.objects.filter(lobbyId=lobbyid, dead=False, role__in=[0, 2]).count()
                     werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
-                    if killers.count() < 1 or killers.count() >= townspeople:
+                    if killers < 1:
                         lobbyid.game_cycle = 2
                         lobbyid.save()
-                        return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
+                        return render(request, 'lobby/WerewolvesWin.html',
+                                      {"killers": killers, "townspeople": townspeople, "werewolves": werewolves})
+                    elif killers >= townspeople:
+                        lobbyid.game_cycle = 2
+                        lobbyid.save()
+                        return render(request, 'lobby/WerewolvesWin.html',
+                                      {"killers": killers, "townspeople": townspeople, "werewolves": werewolves})
 
                     return render(request, 'lobby/GameStartDay.html',
                                   {'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant})
@@ -254,10 +262,15 @@ class NightView(View):
             killers = Participant.objects.filter(lobbyId=lobbyid, role=1,dead=False).count()
             townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2], dead=False).count()
             werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
-            if killers.count() < 1 or killers.count() >= townspeople:
+            if killers < 1:
                 lobbyid.game_cycle = 2
                 lobbyid.save()
-                return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
+                return render(request, 'lobby/WerewolvesWin.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
+            elif killers >= townspeople:
+                lobbyid.game_cycle = 2
+                lobbyid.save()
+                return render(request, 'lobby/WerewolvesWin.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
+
         dead_participants = Participant.objects.filter(lobbyId=lobbyid, dead=True)
 
         you = Participant.objects.get(userId=request.user.id)
@@ -273,7 +286,7 @@ class EndView(View):
         killers = Participant.objects.filter(lobbyId=lobbyid, role=1).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
-        return render(request, 'lobby/GameEnd.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
+        return render(request, 'lobby/WerewolvesWin.html', {"killers": killers, "townspeople": townspeople, "werewolves":werewolves})
 
 
 class CheckCycleView(View):

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Werewolves won</title>
+</head>
+<body>
+
+    <h1>Werewolves won</h1>    <br>
+    <p>The Werewolves were:</p>
+    <ol>
+        {% for k in werewolves %}
+            <li>{{ k.userId.username }}</li>
+        {% endfor %}
+        <br>
+    </ol>
+
+
+
+
+</body>
+</html>
