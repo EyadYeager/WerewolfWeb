@@ -97,10 +97,15 @@
 <a href="/lobby/{{ lobby.lobbyId }}/join/" >Join game!</a>
 <a href="/lobby/{{ lobby.lobbyId }}/leave/" >Leave all games</a>
 <a href="/lobby/{{ lobby.lobbyId }}/gamestart/" class="btn">Start game</a>
-
+<script>
+   async function JavascriptSucks()
+   {
+       location.reload()
+   }
+        setInterval(JavascriptSucks, 2000)
+</script>
 {% if id == 0 %}
     <div class="alert alert-error">
-        <strong>Imagine having less than 3 players</strong>
     </div>
 {% endif %}
 </body>
