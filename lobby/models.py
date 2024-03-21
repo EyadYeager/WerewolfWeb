@@ -41,7 +41,3 @@ class Participant(models.Model):
 #     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 #     is_night = models.BooleanField(default=False)
 #
-#
-# class Round(models.Model):
-#     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
-#     round = models.IntegerField(default=1)

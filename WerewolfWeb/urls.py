@@ -36,7 +36,6 @@ urlpatterns = [
     path('lobby/<int:id>/gamestart/night/', NightView.as_view(), name='night'),
     path('lobby/<int:id>/gamestart/cyclecheck/', CheckCycleView.as_view(), name='cyclecheck'),
     path('lobby/<int:id>/gamestart/daycheck/', CheckDayView.as_view(), name='daycheck'),
-    path('lobby/<int:id>/gamestart/nightcheck/', CheckNightView.as_view(), name='nightcheck'),
     path('lobby/<int:id>/gamestart/werewolf/', WerewolvesView.as_view(), name='werewolf'),
     path('lobby/<int:id>/gamestart/townspeople/', TownsPeopleView.as_view(), name='townspeople'),
 ]

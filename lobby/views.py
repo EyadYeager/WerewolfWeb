@@ -2,7 +2,6 @@ import random
 
 from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.db.models import Max, Sum, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
@@ -161,11 +160,12 @@ class DayView(View):
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, dead=False, role__in=[0, 2]).count()
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
-        for everyone in Participant.objects.filter(lobbyId=lobbyid):
+        for everyone in Participant.objects.filter(lobbyId=lobbyid, dead=False):
             everyone.nightvoted = False
+            everyone.rescued = 0
+            everyone.killed = 0
 
         # Participant.userId = request.user.id
-        # print(request.GET['userid'])
         if "userid" in request.GET:
             current_participant_id += int(request.GET['userid'])
 
@@ -233,8 +233,9 @@ class NightView(View):
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2, dead=False).count()
 
-        for everyone in Participant.objects.filter(lobbyId=lobbyid):
+        for everyone in Participant.objects.filter(lobbyId=lobbyid, dead=False):
             everyone.dayvoted = False
+            everyone.vote_count = 0
         if "action" in request.GET:
             current_participant_id = int(request.GET['userid'])
             action_id = str(request.GET['action'])
@@ -272,28 +273,31 @@ class NightView(View):
                     p.killed = 0
                     p.rescued = 0
                     p.save()
-            print("npnad")
 
-        if werewolves < 1:
-            lobbyid.game_cycle = 2
-            lobbyid.save()
-            return render(request, 'lobby/TownspeopleWin.html',
-                          {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves})
-        if werewolves >= townspeople:
-            lobbyid.game_cycle = 2
-            lobbyid.save()
-            return render(request, 'lobby/WerewolvesWin.html',
-                          {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves})
+                if werewolves < 1:
+                    lobbyid.game_cycle = 2
+                    lobbyid.save()
+                    return render(request, 'lobby/TownspeopleWin.html',
+                                  {"werewolves": werewolves, "townspeople": townspeople,
+                                   "List_werewolves": List_werewolves})
+                if werewolves >= townspeople:
+                    lobbyid.game_cycle = 2
+                    lobbyid.save()
+                    return render(request, 'lobby/WerewolvesWin.html',
+                                  {"werewolves": werewolves, "townspeople": townspeople,
+                                   "List_werewolves": List_werewolves})
 
-        dead_participants = Participant.objects.filter(lobbyId=lobbyid, dead=True)
-        hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, nightvoted=False, dead=False)
-        lobbyid.game_cycle = 0
-        lobbyid.save()
-        print("gamecycle worldkaslfnl")
+                dead_participants = Participant.objects.filter(lobbyId=lobbyid, dead=True)
+                hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, nightvoted=False, dead=False)
+                lobbyid.game_cycle = 0
+                lobbyid.save()
+                return render(request, 'lobby/GameStartNight.html',
+                              {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
+                               'lobbyid': lobbyid,
+                               "dead_participants": dead_participants, "you": you, "hasnt_voted": hasnt_voted})
         return render(request, 'lobby/GameStartNight.html',
                       {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
-                       'lobbyid': lobbyid,
-                       "dead_participants": dead_participants, "you": you, "hasnt_voted": hasnt_voted})
+                       'lobbyid': lobbyid, "you": you})
 
 
 class WerewolvesView(View):
@@ -334,15 +338,7 @@ class CheckDayView(View):
         return HttpResponse(listNotVoted)
 
 
-class CheckNightView(View):
-    def get(self, request, id):
-        lobbyid = Lobby.objects.get(lobbyId=id)
-        hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, dead=False, nightvoted=False, role__in=[1, 2])
-        listNotVoted = ""
-        for n in hasnt_voted:
-            listNotVoted += ", " + n.userId.username
 
-        return HttpResponse(listNotVoted)
 #
 # class DeleteLobby(View):
 #     def get(self, request):

@@ -138,27 +138,13 @@
         if ({{werewolves}} < 1) {
             window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/townspeople/"
         }
-        if (gamecycle == 2) {
-            location.reload()
-        }
 
 
     }
 
     setInterval(JavascriptSucks, 2000)
 
-    setInterval(async () => {
-        console.log('hi')
 
-        const lobby_id = "{{ lobbyid.lobbyId }}";
-        const response = await fetch(`/lobby/` + lobby_id + `/gamestart/nightcheck/`);
-        const didNotVote = await response.text();
-
-        const hi = await document.getElementById('hi')
-        console.log(hi)
-        const dateNow = Date.now();
-        hi.innerHTML = `<br> <h3> People who haven't voted </h3> <p>${dateNow} ${didNotVote}</p>`
-    }, 2000)
 </script>
 </body>
 </html>

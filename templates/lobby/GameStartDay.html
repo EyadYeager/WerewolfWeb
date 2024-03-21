@@ -80,23 +80,24 @@
     <div class="player-info">
         <div class="username_box">
 
+                {% for p in lobbyid.participants.all %}
+                    {% if p.dead == False %}
+                    <div class="username-card-container">
+                        <p class="username">{{ p.userId.username }}</p>
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"
+                                                                                               type="submit"
+                                                                                               value="Vote">
+                        </form>
+                    </div>
+                    <br>
 
-            {% for p in lobbyid.participants.all %}
-                <div class="username-card-container">
-                    <p class="username">{{ p.userId.username }}</p>
-                    <form method="get"
-                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
-                        <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button" type="submit"
-                                                                                           value="Vote">
-                    </form>
-                </div>
-                <br>
-
-            {% endfor %}
-
+                    {% endif %}
+                {% endfor %}
         </div>
         {% if Dead_participant %}
-            <ul>{{ Dead_participant.userId.username }} is dead </ul>
+            <ul>{{ Dead_participant.userId.username }} is dead</ul>
         {% endif %}
         <div id="hi">
             <br>
@@ -107,11 +108,6 @@
             const JavascriptSucks = async () => {
                 const lobby_id = "{{ lobbyid.lobbyId }}";
                 const response = await fetch(`/lobby/` + lobby_id + `/gamestart/cyclecheck/`);
-                
-                if (!response) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night/"
-                }
-                
                 const gamecycle = await response.text();
                 if (gamecycle == 1) {
                     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night/"
@@ -121,9 +117,6 @@
                 }
                 if ({{werewolves}} < 1) {
                     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/townspeople/"
-                }
-                if (gamecycle == 2){
-                    location.reload()
                 }
             };
 
