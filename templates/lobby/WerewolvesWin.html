@@ -4,7 +4,7 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url("https://cdn.discordapp.com/attachments/1149699343218122825/1220291011322970112/dgajohz-25c6819f-860f-4cc4-9a18-2e07faa28127.png?ex=660e6791&is=65fbf291&hm=90415cc0c6cbab13fe97ab6f766b58c789857399686d86de505316a45ccaecb5&");
+            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213060756380327977/file-r5VL7keOz6n0cskX8qhzP4rk.png?ex=65fd545d&is=65eadf5d&hm=046fa9d0f62bb5fed37de3d12f320e48942520a084252a9f7c455defd0879cd0&=&format=webp&quality=lossless&width=720&height=411");
             background-repeat: no-repeat;
             background-size: cover;
             color: #333;
@@ -43,6 +43,31 @@
             transition: background-color 0.3s; /* Smooth transition for hover effect */
 
         }
+
+        .username_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* To wrap the player cards */
+        }
+
+        .username {
+            font-size: 24px;
+            color: ghostwhite;
+
+        }
+
+        .username-card-container {
+            width: 14rem;
+            height: 6rem;
+            background-color: #775baf;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
+            margin: 5px; /* Adjust the margin as per your requirement */
+        }
+
     </style>
     <title>Werewolves won</title>
 </head>
@@ -57,7 +82,7 @@
     <br>
 </ol>
 
-<form method="get" class="button" action="/lobby/"> <input type="submit" value="go back to lobby"> </form>
+<a href="/lobby/">Go back to lobby</a>
 
 </body>
 </html>

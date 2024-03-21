@@ -120,7 +120,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 GAME_STATUS = (
-    (0, 'Starting'),
+    (0, 'Not Started'),
     (1, 'Active'),
     (2, 'Ended')
 )

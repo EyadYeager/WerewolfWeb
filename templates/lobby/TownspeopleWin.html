@@ -43,6 +43,31 @@
             transition: background-color 0.3s; /* Smooth transition for hover effect */
 
         }
+
+        .username_box {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap; /* To wrap the player cards */
+        }
+
+        .username {
+            font-size: 24px;
+            color: ghostwhite;
+
+        }
+
+        .username-card-container {
+            width: 14rem;
+            height: 6rem;
+            background-color: #775baf;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
+            margin: 5px; /* Adjust the margin as per your requirement */
+        }
+
     </style>
     <meta charset="UTF-8">
     <title>Townspeople Won</title>
@@ -56,6 +81,6 @@
     {% endfor %}
     <br>
 </ol>
-<form method="get" class="button" action="/lobby/"> <input type="submit" value="go back to lobby"> </form>
+<a href="/lobby/">Go back to lobby</a>
 </body>
 </html>

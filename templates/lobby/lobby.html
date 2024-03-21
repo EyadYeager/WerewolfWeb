@@ -84,14 +84,14 @@
     <title>Lobby - {{ lobbyid.lobby_name }}</title>
 </head>
 <body>
+<p>{{ you.userId.username }}</p>
 <h1>Lobby: {{ lobbyid.lobby_name }}</h1>
 <p>Max players: {{ lobbyid.max_players }}</p>
 <p>Status: {{ lobbyid.get_game_status_display }}</p>
 <div class="container"><a href="/lobby/">Go back</a></div>
 <ol>
-
     {% for p in lobbyid.participants.all %}
-        <li>{{ p.userId.username }}</li>
+        <li>{{ p.userId.username }} {% if p.ready %}ready{% endif %}</li>
     {% endfor %}
 </ol>
 <a href="/lobby/{{ lobbyid.lobbyId }}/join/" >Join game!</a>
@@ -101,7 +101,7 @@
 <script>
    async function JavascriptSucks()
    {
-       {#location.reload()#}
+       location.reload()
    }
         setInterval(JavascriptSucks, 2000)
 
