@@ -96,24 +96,50 @@
 
         </div>
         {% if Dead_participant %}
-            <a>{{ Dead_participant.userId.username }} is dead </a>
+            <ul>{{ Dead_participant.userId.username }} is dead </ul>
         {% endif %}
+        <div id="hi">
+            <br>
+            <h3> People who haven't voted </h3>
+        </div>
 
-
-        <script async>
-            async function JavascriptSucks() {
+        <script>
+            const JavascriptSucks = async () => {
                 const lobby_id = "{{ lobbyid.lobbyId }}";
-                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/check/`);
+                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/cyclecheck/`);
+                
+                if (!response) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night/"
+                }
+                
                 const gamecycle = await response.text();
                 if (gamecycle == 1) {
                     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night/"
                 }
-                if (gamecycle == 2) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/end/"
+                if ({{ werewolves }} >= {{townspeople}}) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/werewolves/"
                 }
-            }
+                if ({{werewolves}} < 1) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/townspeople/"
+                }
+                if (gamecycle == 2){
+                    location.reload()
+                }
+            };
 
-            setInterval(JavascriptSucks, 3000)
+            setInterval(JavascriptSucks, 2000)
+
+            setInterval(async () => {
+                console.log('hi')
+
+                const lobby_id = "{{ lobbyid.lobbyId }}";
+                const response = await fetch(`/lobby/` + lobby_id + `/gamestart/daycheck/`);
+                const didNotVote = await response.text();
+
+                const hi = await document.getElementById('hi')
+                console.log(hi)
+                hi.innerHTML = `<br> <h3> People who haven't voted </h3> <p> ${didNotVote}</p>`
+            }, 2000)
 
         </script>
 
