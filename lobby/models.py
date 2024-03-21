@@ -27,8 +27,8 @@ class Lobby(models.Model):
 class Participant(models.Model):
     lobbyId = models.ForeignKey(Lobby, on_delete=models.CASCADE, related_name='participants')
     userId = models.ForeignKey(User, on_delete=models.CASCADE)
-    role = models.IntegerField(choices=GAME_ROLES)
-    vote_count = models.IntegerField()
+    role = models.IntegerField(choices=GAME_ROLES, default=0)
+    vote_count = models.IntegerField(default=0)
     dayvoted = models.BooleanField(default=False)
     nightvoted = models.BooleanField(default=False)
     killed = models.IntegerField(default=0)

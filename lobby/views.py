@@ -21,14 +21,17 @@ class SignUpView(generic.CreateView):
 
 class LobbyView(View):
     def get(self, request, id):
-        # print(id)
 
         try:
             lobbyid = Lobby.objects.get(lobbyId=id)
-            you = Participant.objects.get(userId=request.user.id)
         except Lobby.DoesNotExist:
             return redirect('/lobby/')
 
+        try:
+            you = Participant.objects.get(userId=request.user.id)
+        except Participant.DoesNotExist:
+            you = Participant(lobbyId=lobbyid, userId=request.user)
+            you.save()
         return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid, "you": you})
 
 
@@ -64,7 +67,6 @@ class LobbyJoinView(View):
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
-
 
         return redirect(f'/lobby/{id}/')
 
@@ -121,7 +123,6 @@ class GameStart(View):
                 everyone.vote_count = 0
                 everyone.dayvoted = False
                 everyone.nightvoted = False
-                everyone.role = 0
                 everyone.dead = False
                 everyone.save()
             participants = Participant.objects.filter(lobbyId=lobbyid)
@@ -132,12 +133,13 @@ class GameStart(View):
 
             # Assign roles within each group of 4 participants
             for i, participant in enumerate(participants_list, start=1):
-                if i % 4 == 1:
-                    participant.role = 1  # Assign role 1 for the first participant in every group of 4
-                elif i % 4 == 0:
-                    participant.role = 2  # Assign role 2 for the last participant in every group of 4
+                remainder = i % 4
+                if remainder == 1:
+                    participant.role = 1  # Assign werewolf
+                elif remainder == 2:
+                    participant.role = 2  # Assign doctor
                 else:
-                    participant.role = 0  # Assign role 0 for the rest of the participants
+                    participant.role = 0  # Assign citizen (for remainder 0 and 3)
                 participant.save()
 
             if lobbyid.game_status == 0:
