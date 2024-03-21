@@ -1,6 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213060756380327977/file-r5VL7keOz6n0cskX8qhzP4rk.png?ex=65fd545d&is=65eadf5d&hm=046fa9d0f62bb5fed37de3d12f320e48942520a084252a9f7c455defd0879cd0&=&format=webp&quality=lossless&width=720&height=411");
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: #333;
+            text-align: center; /* Center align the content */
+            font-size: 20px;
+
+        }
+
+        h1 {
+            color: #775baf;
+            font-family: Algerian;
+        }
+
+        a {
+            display: inline-block;
+            background-color: #775baf;
+            color: ghostwhite;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+
+        a:hover {
+            background-color: #775baf; /* Darken the button upon hover */
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #a156fc;
+            color: ghostwhite;
+            padding: 10px 20px;
+            border-radius: 5px; /* Rounded corners for the links */
+            text-decoration: none; /* Remove underline from links */
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+
+        }
+    </style>
     <title>Werewolves won</title>
 </head>
 <body>
@@ -14,7 +57,7 @@
     <br>
 </ol>
 
-<form method="get" action="/lobby{{ lobbyid.lobbyId }}/"> go back to lobby</form>
+<form method="get" class="button" action="/lobby{{ lobbyid.lobbyId }}/"> go back to lobby</form>
 
 </body>
 </html>
