@@ -34,6 +34,7 @@ class Participant(models.Model):
     killed = models.IntegerField(default=0)
     rescued = models.IntegerField(default=0)
     dead = models.BooleanField(default=False)
+    ready = models.BooleanField(default=False)
 
 
 

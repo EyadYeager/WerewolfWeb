@@ -24,11 +24,11 @@ class LobbyView(View):
         # print(id)
 
         try:
-            lobby = Lobby.objects.get(lobbyId=id)
+            lobbyid = Lobby.objects.get(lobbyId=id)
         except Lobby.DoesNotExist:
             return redirect('/lobby/')
 
-        return render(request, 'lobby/lobby.html', {'lobby': lobby})
+        return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid})
 
 
 class MainLobbyView(View):
@@ -40,55 +40,30 @@ class MainLobbyView(View):
 
 class LobbyJoinView(View):
     def get(self, request, id):
-        lobby = Lobby.objects.get(lobbyId=id)
+        lobbyid = Lobby.objects.get(lobbyId=id)
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
-        participants_count = Participant.objects.filter(lobbyId=lobby).count()
+        participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
         # print(request.user)
         try:
 
             if participant_check > 0:
                 alert = 4
-                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+                return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid})
 
             elif participants_count > 16:
                 alert = 0
-                return render(request, 'lobby/alert.html', {'alert': alert, 'id': id})
+                return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid})
 
             else:
-                participant = Participant(userId=request.user, lobbyId=lobby, role=0, vote_count=0, dayvoted=False,
+                participant = Participant(userId=request.user, lobbyId=lobbyid, role=0, vote_count=0, dayvoted=False,
                                           nightvoted=False)
                 participant.save()
-                lobby.game_status = 0
-                lobby.save()
+                lobbyid.game_status = 0
+                lobbyid.save()
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
 
-        for everyone in Participant.objects.filter(lobbyId=lobby):
-            everyone.vote_count = 0
-            everyone.dayvoted = False
-            everyone.nightvoted = False
-            everyone.role = 0
-            everyone.dead = False
-            everyone.save()
-        participants = Participant.objects.filter(lobbyId=lobby)
-        for p in participants:
-            p.role = 0
-            p.save()
-
-        # this code is for giving roles
-        participants_list = list(participants)
-        random.shuffle(participants_list)
-
-        # Assign roles within each group of 4 participants
-        for i, participant in enumerate(participants_list, start=1):
-            if i % 4 == 1:
-                participant.role = 1  # Assign role 1 for the first participant in every group of 4
-            elif i % 4 == 0:
-                participant.role = 2  # Assign role 2 for the last participant in every group of 4
-            else:
-                participant.role = 0  # Assign role 0 for the rest of the participants
-            participant.save()
 
         return redirect(f'/lobby/{id}/')
 
@@ -130,31 +105,54 @@ class GameStart(View):
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
         you = Participant.objects.get(userId=request.user.id)
         player_count = lobbyid.participants.count()
+        you.ready = True
+        you.save()
+        for p in Participant.objects.filter(lobbyId=lobbyid, ready=False):
+            print(p.userId.username)
         if player_count < 4:
             alert = 1
             return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
 
         lobbyid.game_cycle = 0
         lobbyid.save()
-        if lobbyid.game_status == 0:
-            lobbyid.game_status = 1
-            lobbyid.save()
+        if Participant.objects.filter(lobbyId=lobbyid, ready=False).count == 0:
 
-            if you.role == 0:
-                role_alert = 0
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
-            if you.role == 1:
-                role_alert = 1
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
-            if you.role == 2:
-                role_alert = 2
-                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
+            if lobbyid.game_status == 0:
+                lobbyid.game_status = 1
+                lobbyid.save()
 
-            return render(request, 'lobby/GameStartDay.html',
-                          {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens})
-        else:
-            alert = 6
-            return render(request, 'lobby/alert.html', {"alert": alert, 'lobbyid': lobbyid, "you": you})
+                for everyone in Participant.objects.filter(lobbyId=lobbyid):
+                    everyone.vote_count = 0
+                    everyone.dayvoted = False
+                    everyone.nightvoted = False
+                    everyone.role = 0
+                    everyone.dead = False
+                    everyone.save()
+                participants = Participant.objects.filter(lobbyId=lobbyid)
+
+                # this code is for giving roles
+                participants_list = list(participants)
+                random.shuffle(participants_list)
+
+                # Assign roles within each group of 4 participants
+                for i, participant in enumerate(participants_list, start=1):
+                    if i % 4 == 1:
+                        participant.role = 1  # Assign role 1 for the first participant in every group of 4
+                    elif i % 4 == 0:
+                        participant.role = 2  # Assign role 2 for the last participant in every group of 4
+                    else:
+                        participant.role = 0  # Assign role 0 for the rest of the participants
+                    participant.save()
+
+
+
+                return render(request, 'lobby/alert.html',
+                              {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens})
+            else:
+                alert = 6
+                return render(request, 'lobby/alert.html', {"alert": alert, 'lobbyid': lobbyid, "you": you})
+
+        return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid})
 
 
 class DayView(View):
@@ -168,6 +166,7 @@ class DayView(View):
             everyone.nightvoted = False
             everyone.rescued = 0
             everyone.killed = 0
+            everyone.ready = False
 
         # Participant.userId = request.user.id
         if "userid" in request.GET:
@@ -313,7 +312,7 @@ class WerewolvesView(View):
         lobbyid.game_status = 0
         return render(request, 'lobby/WerewolvesWin.html',
                       {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
-                       "lobbyid":lobbyid})
+                       "lobbyid": lobbyid})
 
 
 class TownsPeopleView(View):
@@ -335,6 +334,13 @@ class CheckCycleView(View):
         return HttpResponse(lobby.game_cycle)
 
 
+class CheckReadyView(View):
+    def get(self, request, id):
+        lobby = Lobby.objects.get(lobbyId=id)
+        unready = Participant.objects.filter(lobbyId=lobby, ready=False).count()
+        return HttpResponse(unready)
+
+
 class CheckDayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
@@ -345,9 +351,14 @@ class CheckDayView(View):
 
         return HttpResponse(listNotVoted)
 
-
-
-#
+class ShowRoleView(View):
+    def get(self, request, id):
+        lobbyid = Lobby.objects.get(lobbyId=id)
+        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
+        doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
+        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
+        you = Participant.objects.get(userId=request.user.id)
+        return render(request, 'lobby/alert.html', {"lobbyid": lobbyid, "citizens": citizens, "doctors": doctors, "werewolves": werewolves,"role_alert": you.role})
 # class DeleteLobby(View):
 #     def get(self, request):
 #         LobbyDelete = GAME_STATUS(2)

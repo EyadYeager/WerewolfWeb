@@ -81,28 +81,41 @@
         }
     </style>
     <meta charset="UTF-8">
-    <title>Lobby - {{ lobby.lobby_name }}</title>
+    <title>Lobby - {{ lobbyid.lobby_name }}</title>
 </head>
 <body>
-<h1>Lobby: {{ lobby.lobby_name }}</h1>
-<p>Max players: {{ lobby.max_players }}</p>
-<p>Status: {{ lobby.get_game_status_display }}</p>
+<h1>Lobby: {{ lobbyid.lobby_name }}</h1>
+<p>Max players: {{ lobbyid.max_players }}</p>
+<p>Status: {{ lobbyid.get_game_status_display }}</p>
 <div class="container"><a href="/lobby/">Go back</a></div>
 <ol>
-    {#{{ user }}#}
-    {% for p in lobby.participants.all %}
+
+    {% for p in lobbyid.participants.all %}
         <li>{{ p.userId.username }}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobby.lobbyId }}/join/" >Join game!</a>
-<a href="/lobby/{{ lobby.lobbyId }}/leave/" >Leave all games</a>
-<a href="/lobby/{{ lobby.lobbyId }}/gamestart/" class="btn">Start game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/join/" >Join game!</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/leave/" >Leave all games</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/gamestart/" class="btn">Ready</a>
+
 <script>
    async function JavascriptSucks()
    {
-       location.reload()
+       {#location.reload()#}
    }
         setInterval(JavascriptSucks, 2000)
+
+    const JavascriptBad = async () => {
+                const lobby_id = "{{ lobbyid.lobbyId }}";
+                const response = await fetch(`/lobby/` + lobby_id + `/readycheck/`);
+                const unready = await response.text();
+                if (unready == 0) {
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/alert/"
+                }
+            };
+
+            setInterval(JavascriptBad, 1000)
+
 </script>
 {% if id == 0 %}
     <div class="alert alert-error">
