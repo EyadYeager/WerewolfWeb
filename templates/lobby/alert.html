@@ -10,11 +10,11 @@
 
     let alertMessage;
     console.log("i like pizza")
-    const alerts = ["the player count is max", "Not enough players", 'Already in this lobby', 'Not in game', 'Already in another game', 'Removed you from another lobby',]
+    const alerts = ["the player count is max", "Not enough players", 'Already in this lobby', 'Not in game', 
+        'Already in another game', 'Removed you from another lobby','the game has already started ']
 
     alert(alerts[{{ alert }}])
-    {#alert({{ lobbyid }})#}
-    window.location.href = "/lobby/";
+    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/";
 </script>
 
 <script>
@@ -24,7 +24,6 @@
     const alerts = ['Already voted', 'You are already dead, you can not vote']
 
     alert(alerts[{{ in_game_alert }}])
-    {#alert({{ lobbyid }})#}
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day";
 </script>
 
@@ -36,7 +35,6 @@
     const alerts = ['You are a citizen', 'You are a werewolf', 'You are a doctor']
 
     alert(alerts[{{ role_alert }}])
-    {#alert({{ lobbyid }})#}
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/";
 </script>
 
@@ -49,7 +47,6 @@
     const alerts = ['You have already chosen', 'You are already dead']
 
     alert(alerts[{{ night_alert }}])
-    {#alert({{ lobbyid }})#}
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night";
 </script>
 

@@ -5,14 +5,14 @@
     <title>Townspeople Won</title>
 </head>
 <body>
-    <h1>Townspeople won</h1>    <br>
-    <p>The Werewolves were:</p>
-    <ol>
-        {% for k in List_werewolves %}
-            <li>{{ k.userId.username }}</li>
-        {% endfor %}
-        <br>
-    </ol>
-
+<h1>Townspeople won</h1>    <br>
+<p>The Werewolves were:</p>
+<ol>
+    {% for k in List_werewolves %}
+        <li>{{ k.userId.username }}</li>
+    {% endfor %}
+    <br>
+</ol>
+<form method="get" action="/lobby{{ lobbyid.lobbyId }}/"> go back to lobby</form>
 </body>
 </html>

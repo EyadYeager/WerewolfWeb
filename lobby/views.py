@@ -125,32 +125,36 @@ class LobbyCreateView(View):
 class GameStart(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
-        # player_count = lobbyid.participants.count()
-        # if player_count < 4:
-        #     alert = 1
-        #     return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
+        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
+        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
+        doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
+        you = Participant.objects.get(userId=request.user.id)
+        player_count = lobbyid.participants.count()
+        if player_count < 4:
+            alert = 1
+            return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
+
         lobbyid.game_cycle = 0
         lobbyid.save()
         if lobbyid.game_status == 0:
             lobbyid.game_status = 1
             lobbyid.save()
 
-        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
-        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
-        doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
-        you = Participant.objects.get(userId=request.user.id)
-        if you.role == 0:
-            role_alert = 0
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
-        if you.role == 1:
-            role_alert = 1
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
-        if you.role == 2:
-            role_alert = 2
-            return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
+            if you.role == 0:
+                role_alert = 0
+                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
+            if you.role == 1:
+                role_alert = 1
+                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
+            if you.role == 2:
+                role_alert = 2
+                return render(request, 'lobby/alert.html', {"role_alert": role_alert, 'lobbyid': lobbyid, "you": you})
 
-        return render(request, 'lobby/GameStartDay.html',
-                      {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens})
+            return render(request, 'lobby/GameStartDay.html',
+                          {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens})
+        else:
+            alert = 6
+            return render(request, 'lobby/alert.html', {"alert": alert, 'lobbyid': lobbyid, "you": you})
 
 
 class DayView(View):
@@ -306,8 +310,10 @@ class WerewolvesView(View):
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        lobbyid.game_status = 0
         return render(request, 'lobby/WerewolvesWin.html',
-                      {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves})
+                      {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
+                       "lobbyid":lobbyid})
 
 
 class TownsPeopleView(View):
@@ -316,8 +322,10 @@ class TownsPeopleView(View):
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
+        lobbyid.game_status = 0
         return render(request, 'lobby/TownspeopleWin.html',
-                      {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves})
+                      {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
+                       "lobbyid": lobbyid})
 
 
 class CheckCycleView(View):
