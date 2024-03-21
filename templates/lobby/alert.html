@@ -27,7 +27,7 @@
     {#alert({{ lobbyid }})#}
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day";
 </script>
-{{ funnybutton }}
+
 
 <script>
 
@@ -40,15 +40,17 @@
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day/";
 </script>
 
+
+
 <script>
 
     let alertMessage;
     console.log("i like pizza")
-    const alerts = ['value is none']
+    const alerts = ['You have already chosen', 'You are already dead']
 
-    alert(alerts[{{ none_alert }}])
+    alert(alerts[{{ night_alert }}])
     {#alert({{ lobbyid }})#}
-    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day";
+    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night";
 </script>
 
 </body>
