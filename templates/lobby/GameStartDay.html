@@ -1,5 +1,21 @@
 <html lang="en">
 <head>
+    <script>
+        const reloadPageFunction = async () => {
+            const doWeReload = localStorage.getItem("Reload");
+            if (doWeReload !== 'Nah') {
+                await localStorage.setItem("Reload", "Nah");
+                location.reload();
+                return;
+            }
+        }
+
+        const localStorageGenocide = () => {
+            localStorage.removeItem("Reload")
+        }
+
+        reloadPageFunction();
+    </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -69,7 +85,7 @@
 
     </style>
     <title>Werewolf</title></head>
-<body>
+<body onunload="localStorageGenocide();">
 
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
@@ -173,6 +189,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>

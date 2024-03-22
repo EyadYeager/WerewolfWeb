@@ -4,17 +4,19 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213060756380327977/file-r5VL7keOz6n0cskX8qhzP4rk.png?ex=65fd545d&is=65eadf5d&hm=046fa9d0f62bb5fed37de3d12f320e48942520a084252a9f7c455defd0879cd0&=&format=webp&quality=lossless&width=720&height=411");
+            background-image: url("https://media.discordapp.net/attachments/1149699343218122825/1220699058449023008/DALLE_2024-03-22_12.42.07_-_Create_an_image_of_a_victorious_group_of_townspeople_from_a_werewolf_game_celebrating_their_win._The_scene_is_at_night_with_a_full_moon_in_the_backgro.webp?ex=660fe397&is=65fd6e97&hm=22bef06f82cef7e5578ce7a0b235d136ef03c19fe9efd28b1b9467c155096590&=&format=webp&width=1174&height=671");
             background-repeat: no-repeat;
             background-size: cover;
-            color: #333;
+            background-position: center;
+            background-attachment: fixed;
+            color: #770303;
             text-align: center; /* Center align the content */
             font-size: 20px;
 
         }
 
         h1 {
-            color: #775baf;
+            color: #0a4077;
             font-family: Algerian;
         }
 
@@ -30,13 +32,13 @@
         }
 
         a:hover {
-            background-color: #775baf; /* Darken the button upon hover */
+            background-color: #5c458a; /* Darken the button upon hover */
         }
 
         .button {
             display: inline-block;
             background-color: #a156fc;
-            color: ghostwhite;
+            color: teal;
             padding: 10px 20px;
             border-radius: 5px; /* Rounded corners for the links */
             text-decoration: none; /* Remove underline from links */
@@ -53,7 +55,7 @@
 
         .username {
             font-size: 24px;
-            color: ghostwhite;
+            color: #770303;
 
         }
 
@@ -74,13 +76,16 @@
 </head>
 <body>
 <h1>Townspeople won</h1>    <br>
-<p class="username">The Werewolves were:</p>
+<div class="username_box">
+<div class="username-card-container">
+<p>The Werewolves were:</p>
 
     {% for k in List_werewolves %}
         <p class="username">{{ k.userId.username }}</p>
     {% endfor %}
     <br>
-
+</div>
+</div>
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 </body>
 </html>

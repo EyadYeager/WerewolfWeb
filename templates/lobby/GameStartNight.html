@@ -102,7 +102,7 @@
                     <p class="username">{{ p.userId.username }}
                 {% endif %}
 
-                {% if you.role == 1 %}
+                {% if you.role == 1 and you.dead == False %}
 
                     <form method="get"
                           action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
@@ -110,7 +110,7 @@
                         <input class="kill_button" type="hidden" name="action" value="killed">
                         <input class="button" type="submit" value="KILL">
                     </form>
-                {% elif you.role == 2 %}
+                {% elif you.role == 2 and you.dead == False%}
 
                     <form method="get"
                           action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}

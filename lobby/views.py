@@ -231,7 +231,7 @@ class NightView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2], dead=False).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2, dead=False).count()
 
         for everyone in Participant.objects.filter(lobbyId=lobbyid, dead=False):
@@ -307,7 +307,7 @@ class WerewolvesView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
         lobbyid.game_status = 0
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0
