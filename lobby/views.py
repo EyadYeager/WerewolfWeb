@@ -45,7 +45,6 @@ class LobbyJoinView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
-        # print(request.user)
         try:
 
             if participant_check > 0:
@@ -108,8 +107,6 @@ class GameStart(View):
         player_count = lobbyid.participants.count()
         you.ready = True
         you.save()
-        for p in Participant.objects.filter(lobbyId=lobbyid, ready=False):
-            print(p.userId.username)
         if player_count < 4:
             alert = 1
             return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
@@ -128,8 +125,6 @@ class GameStart(View):
             # this code is for giving roles
             participants_list = list(participants)
             random.shuffle(participants_list)
-            print(participants_list)
-            print("something ")
             # Assign roles within each group of 4 participants
             for i, participant in enumerate(participants_list, start=1):
                 remainder = i % 4
@@ -140,7 +135,6 @@ class GameStart(View):
                 else:
                     participant.role = 0  # Assign citizen (for remainder 0 and 3)
                 participant.save()
-                print(participants)
 
             if lobbyid.game_status == 0:
                 lobbyid.game_status = 1
@@ -168,8 +162,6 @@ class DayView(View):
             everyone.rescued = 0
             everyone.killed = 0
             everyone.save()
-            print(everyone.userId.username)
-            print(everyone.role)
         # Participant.userId = request.user.id
         if "userid" in request.GET:
             current_participant_id += int(request.GET['userid'])
@@ -221,8 +213,6 @@ class DayView(View):
                     for k in Participant.objects.filter(lobbyId=lobbyid):
                         k.ready = False
                         k.save()
-                        print(k.userId.username)
-                        print(k.ready)
                     return render(request, 'lobby/GameStartDay.html',
                                   {"werewolves": werewolves, "townspeople": townspeople,
                                    "List_werewolves": List_werewolves,
