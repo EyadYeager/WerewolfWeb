@@ -148,7 +148,7 @@ class GameStart(View):
                 lobbyid.game_status = 1
                 lobbyid.save()
 
-                return render(request, 'lobby/alert.html',
+                return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens})
             else:
                 alert = 6
@@ -377,16 +377,6 @@ class CheckDayView(View):
         return HttpResponse(listNotVoted)
 
 
-class ShowRoleView(View):
-    def get(self, request, id):
-        lobbyid = Lobby.objects.get(lobbyId=id)
-        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
-        werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
-        doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
-        you = Participant.objects.get(userId=request.user.id)
-        return render(request, 'lobby/alert.html',
-                      {"lobbyid": lobbyid, "citizens": citizens, "doctors": doctors, "werewolves": werewolves,
-                       "role_alert": you.role})
 # class DeleteLobby(View):
 #     def get(self, request):
 #         LobbyDelete = GAME_STATUS(2)

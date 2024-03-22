@@ -83,7 +83,15 @@
 <a href="/lobby/">Go to the lobby</a>
 
 <h1>It is nighttime</h1><br>
-<h2>{{you.role }}</h2>
+{% if you.role == 0 %}
+    <h2>Citizen</h2>
+{% endif %}
+{% if you.role == 1 %}
+    <h2>Werewolf</h2>
+{% endif %}
+{% if you.role == 2 %}
+    <h2>Doctor</h2>
+{% endif %}
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}

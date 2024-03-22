@@ -31,7 +31,6 @@ urlpatterns = [
     path('lobby/<int:id>/leave/', LobbyLeaveView.as_view(), name='lobby'),
     path('lobby/CreateLobby/', LobbyCreateView.as_view(), name='name'),
     path('lobby/<int:id>/readycheck/', CheckReadyView.as_view(), name='readycheck'),
-    path('lobby/<int:id>/alert/', ShowRoleView.as_view(), name='showalert'),
     path('lobby/<int:id>/gamestart/', GameStart.as_view(), name='start'),
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('lobby/<int:id>/gamestart/day/', DayView.as_view(), name='day'),
