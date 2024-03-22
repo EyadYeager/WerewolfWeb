@@ -92,7 +92,13 @@
             {% for p in lobbyid.participants.all %}
                 {% if p.dead == False %}
                     <div class="username-card-container">
-                        <p class="username">{{ p.userId.username }} </p>
+                        {% if you.role == 1 and p.role == 1 %}
+                            <p class="username" style="color: red">{{ p.userId.username }} </p>
+                        {% else %}
+
+                            
+                            <p class="username">{{ p.userId.username }} </p>
+                        {% endif %}
                         <form method="get"
                               action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"

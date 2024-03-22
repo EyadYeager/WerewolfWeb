@@ -95,8 +95,12 @@
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}
-            <div class="username-card-container">
+        <div class="username-card-container">
+            {% if you.role == 1 and p.role == 1 %}
+                <p class="username" style="color: red">{{ p.userId.username }} </p>
+            {% else %}
                 <p class="username">{{ p.userId.username }}
+                {% endif %}
 
                     {% if you.role == 1 %}
 
@@ -116,8 +120,8 @@
                         </form>
 
                     {% endif %}
-            </div>
-        {% endif %}
+                </div>
+            {% endif %}
     {% endfor %}
 </div>
 <br>
