@@ -109,7 +109,7 @@ class GameStart(View):
         you.save()
         if player_count < 4:
             alert = 1
-            return render(request, 'lobby/alert.html', {'id': id, 'alert': alert})
+            return render(request, 'lobby/alert.html', {'lobbyid': lobbyid, 'alert': alert})
 
         lobbyid.game_cycle = 0
         lobbyid.save()

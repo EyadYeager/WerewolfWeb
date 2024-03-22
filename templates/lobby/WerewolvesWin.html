@@ -4,8 +4,10 @@
     <style>
         body {
             font-family: 'Arial', sans-serif;
-            background-image: url("https://media.discordapp.net/attachments/1155297794303725619/1213060756380327977/file-r5VL7keOz6n0cskX8qhzP4rk.png?ex=65fd545d&is=65eadf5d&hm=046fa9d0f62bb5fed37de3d12f320e48942520a084252a9f7c455defd0879cd0&=&format=webp&quality=lossless&width=720&height=411");
+            background-image: url("https://cdn.discordapp.com/attachments/1149699343218122825/1220664368161619998/image.png?ex=660fc348&is=65fd4e48&hm=5ae2d9b1a03b32ea279b6b09eb9760683088f7e9129319336f899617bc06a850&");
             background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
             background-size: cover;
             color: #333;
             text-align: center; /* Center align the content */
@@ -53,7 +55,7 @@
 
         .username {
             font-size: 24px;
-            color: ghostwhite;
+            color: red;
 
         }
 
@@ -74,13 +76,13 @@
 <body>
 
 <h1>Werewolves won</h1>    <br>
-<p>The Werewolves were:</p>
-<ol>
+<p class="username">The Werewolves were:</p>
+
     {% for k in List_werewolves %}
-        <li>{{ k.userId.username }}</li>
+        <p class="username">{{ k.userId.username }}</p>
     {% endfor %}
     <br>
-</ol>
+
 
 <a href="/lobby/">Go back to lobby</a>
 

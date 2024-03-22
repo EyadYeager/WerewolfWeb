@@ -78,14 +78,24 @@
     </div>
     <h1>It is day time</h1><br>
     {% if you.role == 0 %}
-        <h2>Citizen</h2>
+        <h2 id="role-text">Citizen</h2>
     {% endif %}
     {% if you.role == 1 %}
-        <h2>Werewolf</h2>
+        <h2 id="role-text">Werewolf</h2>
     {% endif %}
     {% if you.role == 2 %}
-        <h2>Doctor</h2>
+        <h2 id="role-text">Doctor</h2>
     {% endif %}
+<script>
+    const hideRole = async () => {
+        const role = await document.getElementById("role-text");
+  if (role.style.display === "none") {
+    role.style.display = "block";
+  } else {
+    role.style.display = "none";
+  }
+    }
+</script>
     <div class="player-info">
         <div class="username_box">
 
@@ -93,17 +103,17 @@
                 {% if p.dead == False %}
                     <div class="username-card-container">
                         {% if you.role == 1 and p.role == 1 %}
-                            <p class="username" style="color: red">{{ p.userId.username }} </p>
+                            <p class="username" style="color: #770303">{{ p.userId.username }} </p>
                         {% else %}
 
-                            
+
                             <p class="username">{{ p.userId.username }} </p>
                         {% endif %}
                         <form method="get"
-                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
+                        action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"
                                                                                                type="submit"
-                                                                                               value="Vote">
+                            value="Vote">
                         </form>
                     </div>
                     <br>
@@ -119,6 +129,7 @@
             <h3> People who haven't voted </h3>
         </div>
 
+        <button onclick="hideRole()" class="button">Show/Hide role</button>
         <script>
             const JavascriptSucks = async () => {
                 const lobby_id = "{{ lobbyid.lobbyId }}";

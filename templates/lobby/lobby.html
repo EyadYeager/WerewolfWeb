@@ -110,7 +110,7 @@
                 const response = await fetch(`/lobby/` + lobby_id + `/readycheck/`);
                 const unready = await response.text();
                 if (unready == 0) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/alert/"
+                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day"
                 }
             };
 
