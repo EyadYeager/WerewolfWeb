@@ -376,7 +376,6 @@ class CheckDayView(View):
 
         return HttpResponse(listNotVoted)
 
-
 # class DeleteLobby(View):
 #     def get(self, request):
 #         LobbyDelete = GAME_STATUS(2)
