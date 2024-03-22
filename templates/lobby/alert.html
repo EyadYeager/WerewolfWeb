@@ -38,5 +38,15 @@
     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/night";
 </script>
 
+<script>
+
+    let alertMessage;
+    console.log("i like pizza")
+    const alerts = ['You are not a participant of this game']
+
+    alert(alerts[{{ midgame_alert }}])
+    window.location.href = "/lobby/";
+</script>
+
 </body>
 </html>
