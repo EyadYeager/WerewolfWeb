@@ -118,7 +118,7 @@ class GameStart(View):
 
         lobbyid.game_cycle = 0
         lobbyid.save()
-        if Participant.objects.filter(lobbyId=lobbyid, ready=False).count == 0:
+        if Participant.objects.filter(lobbyId=lobbyid, ready=False).count() == 0:
             for everyone in Participant.objects.filter(lobbyId=lobbyid):
                 everyone.vote_count = 0
                 everyone.dayvoted = False
@@ -130,7 +130,8 @@ class GameStart(View):
             # this code is for giving roles
             participants_list = list(participants)
             random.shuffle(participants_list)
-
+            print(participants_list)
+            print("something ")
             # Assign roles within each group of 4 participants
             for i, participant in enumerate(participants_list, start=1):
                 remainder = i % 4
@@ -141,6 +142,7 @@ class GameStart(View):
                 else:
                     participant.role = 0  # Assign citizen (for remainder 0 and 3)
                 participant.save()
+                print(participants)
 
             if lobbyid.game_status == 0:
                 lobbyid.game_status = 1
@@ -167,6 +169,9 @@ class DayView(View):
             everyone.nightvoted = False
             everyone.rescued = 0
             everyone.killed = 0
+            everyone.save()
+            print(everyone.userId.username)
+            print(everyone.role)
         # Participant.userId = request.user.id
         if "userid" in request.GET:
             current_participant_id += int(request.GET['userid'])
@@ -224,12 +229,12 @@ class DayView(View):
                                   {"werewolves": werewolves, "townspeople": townspeople,
                                    "List_werewolves": List_werewolves,
                                    'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant,
-                                   "hasnt_voted": hasnt_voted})
+                                   "hasnt_voted": hasnt_voted, "you": you})
         hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False)
 
         return render(request, 'lobby/GameStartDay.html',
                       {"werewolves": werewolves, "townspeople": townspeople, "List_werewolves": List_werewolves,
-                       'lobbyid': lobbyid, "hasnt_voted": hasnt_voted})
+                       'lobbyid': lobbyid, "hasnt_voted": hasnt_voted, "you": you})
 
 
 class NightView(View):
@@ -244,6 +249,7 @@ class NightView(View):
         for everyone in Participant.objects.filter(lobbyId=lobbyid, dead=False):
             everyone.dayvoted = False
             everyone.vote_count = 0
+            everyone.save()
         if "action" in request.GET:
             current_participant_id = int(request.GET['userid'])
             action_id = str(request.GET['action'])
@@ -273,7 +279,7 @@ class NightView(View):
                                   "killed__sum"] or 0
             counting_rescued = Participant.objects.filter(lobbyId=lobbyid, rescued__gt=0).aggregate(Sum('rescued'))[
                                    "rescued__sum"] or 0
-            if werewolves <= counting_killed and doctors <= counting_rescued:
+            if werewolves == counting_killed and doctors == counting_rescued:
                 participants = Participant.objects.filter(lobbyId=lobbyid)
                 for p in participants:
                     if p.killed > p.rescued:
@@ -313,13 +319,12 @@ class WerewolvesView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
         lobbyid.game_status = 0
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0
             everyone.dayvoted = False
             everyone.nightvoted = False
-            everyone.role = 0
             everyone.ready = False
             everyone.dead = False
             everyone.save()
@@ -339,7 +344,6 @@ class TownsPeopleView(View):
             everyone.vote_count = 0
             everyone.dayvoted = False
             everyone.nightvoted = False
-            everyone.role = 0
             everyone.ready = False
             everyone.dead = False
             everyone.save()
@@ -372,14 +376,17 @@ class CheckDayView(View):
 
         return HttpResponse(listNotVoted)
 
+
 class ShowRoleView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
+        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2)
-        citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         you = Participant.objects.get(userId=request.user.id)
-        return render(request, 'lobby/alert.html', {"lobbyid": lobbyid, "citizens": citizens, "doctors": doctors, "werewolves": werewolves,"role_alert": you.role})
+        return render(request, 'lobby/alert.html',
+                      {"lobbyid": lobbyid, "citizens": citizens, "doctors": doctors, "werewolves": werewolves,
+                       "role_alert": you.role})
 # class DeleteLobby(View):
 #     def get(self, request):
 #         LobbyDelete = GAME_STATUS(2)

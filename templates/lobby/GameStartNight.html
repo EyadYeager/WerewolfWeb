@@ -83,7 +83,7 @@
 <a href="/lobby/">Go to the lobby</a>
 
 <h1>It is nighttime</h1><br>
-
+<h2>{{you.role }}</h2>
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}

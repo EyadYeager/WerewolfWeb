@@ -77,13 +77,14 @@
     <div class="players-list">
     </div>
     <h1>It is day time</h1><br>
+    <h2>{{you.role }}</h2>
     <div class="player-info">
         <div class="username_box">
 
                 {% for p in lobbyid.participants.all %}
                     {% if p.dead == False %}
                     <div class="username-card-container">
-                        <p class="username">{{ p.userId.username }}</p>
+                        <p class="username">{{ p.userId.username }} </p>
                         <form method="get"
                               action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"
