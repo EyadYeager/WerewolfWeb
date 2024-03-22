@@ -1,15 +1,13 @@
 import random
 
-from django.contrib import messages
 from django.contrib.auth.forms import UserCreationForm
-from django.db.models import Max, Sum, Count
-from django.shortcuts import render, redirect, get_object_or_404
+from django.db.models import Max, Sum
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View, generic
 from django.http import HttpResponse
 
 from lobby.models import Lobby, Participant
-from WerewolfWeb.settings import GAME_STATUS, GAME_ROLES
 
 
 # Create your views here.
