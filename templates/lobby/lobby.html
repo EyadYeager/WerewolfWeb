@@ -94,8 +94,8 @@
         <li>{{ p.userId.username }} {% if p.ready %}ready{% endif %}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobbyid.lobbyId }}/join/" >Join game!</a>
-<a href="/lobby/{{ lobbyid.lobbyId }}/leave/" >Leave all games</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/join/" >Join game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/leave/" >Leave game</a>
 <a href="/lobby/{{ lobbyid.lobbyId }}/gamestart/" class="btn">Ready</a>
 
 <script>

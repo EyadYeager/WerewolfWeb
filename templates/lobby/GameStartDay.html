@@ -71,7 +71,7 @@
     <title>Werewolf</title></head>
 <body>
 
-<a href="/lobby/">Go back to lobby</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
 <div id="game-players">
     <div class="players-list">
@@ -86,16 +86,16 @@
     {% if you.role == 2 %}
         <h2 id="role-text">Doctor</h2>
     {% endif %}
-<script>
-    const hideRole = async () => {
-        const role = await document.getElementById("role-text");
-  if (role.style.display === "none") {
-    role.style.display = "block";
-  } else {
-    role.style.display = "none";
-  }
-    }
-</script>
+    <script>
+        const hideRole = async () => {
+            const role = await document.getElementById("role-text");
+            if (role.style.display === "none") {
+                role.style.display = "block";
+            } else {
+                role.style.display = "none";
+            }
+        }
+    </script>
     <div class="player-info">
         <div class="username_box">
 
@@ -110,10 +110,10 @@
                             <p class="username">{{ p.userId.username }} </p>
                         {% endif %}
                         <form method="get"
-                        action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
                             <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"
                                                                                                type="submit"
-                            value="Vote">
+                                                                                               value="Vote">
                         </form>
                     </div>
                     <br>

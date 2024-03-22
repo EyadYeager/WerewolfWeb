@@ -45,13 +45,12 @@ class LobbyJoinView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
+        participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
         try:
 
-            if participant_check > 0:
-                alert = 4
-                return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid})
-
-            elif participants_count > 16:
+            for l in participants:
+                l.delete()
+            if participants_count == 16:
                 alert = 0
                 return render(request, 'lobby/alert.html', {'alert': alert, 'lobbyid': lobbyid})
 
@@ -64,13 +63,14 @@ class LobbyJoinView(View):
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
-
-        return redirect(f'/lobby/{id}/')
+        you = Participant.objects.get(userId=request.user.id)
+        return render(request, 'lobby/lobby.html', {"lobbyid": lobbyid, "you": you})
 
 
 class LobbyLeaveView(View):
     def get(self, request, id):
-        user = request.user
+        you = request.user.id
+        lobbyid = Lobby.objects.get(lobbyId=id)
         participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
 
         try:
@@ -79,7 +79,7 @@ class LobbyLeaveView(View):
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
-        return redirect(f'/lobby/{id}/')
+        return render(request, 'lobby/lobby.html', {"lobbyid": lobbyid, "you": you})
 
 
 class LobbyCreateView(View):

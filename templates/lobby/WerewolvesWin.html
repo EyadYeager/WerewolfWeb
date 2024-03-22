@@ -78,13 +78,12 @@
 <h1>Werewolves won</h1>    <br>
 <p class="username">The Werewolves were:</p>
 
-    {% for k in List_werewolves %}
-        <p class="username">{{ k.userId.username }}</p>
-    {% endfor %}
-    <br>
+{% for k in List_werewolves %}
+    <p class="username">{{ k.userId.username }}</p>
+{% endfor %}
+<br>
 
 
-<a href="/lobby/">Go back to lobby</a>
-
+<a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 </body>
 </html>

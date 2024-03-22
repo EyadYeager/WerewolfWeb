@@ -80,7 +80,7 @@
     </style>
 </head>
 <body>
-<a href="/lobby/">Go to the lobby</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
 <h1>It is nighttime</h1><br>
 {% if you.role == 0 %}
@@ -95,33 +95,33 @@
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}
-        <div class="username-card-container">
-            {% if you.role == 1 and p.role == 1 %}
-                <p class="username" style="color: #780403">{{ p.userId.username }} </p>
-            {% else %}
-                <p class="username">{{ p.userId.username }}
+            <div class="username-card-container">
+                {% if you.role == 1 and p.role == 1 %}
+                    <p class="username" style="color: #780403">{{ p.userId.username }} </p>
+                {% else %}
+                    <p class="username">{{ p.userId.username }}
                 {% endif %}
 
-                    {% if you.role == 1 %}
+                {% if you.role == 1 %}
 
-                        <form method="get"
-                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                            <input class="kill_button" type="hidden" name="action" value="killed">
-                            <input class="button" type="submit" value="KILL">
-                        </form>
-                    {% elif you.role == 2 %}
+                    <form method="get"
+                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                        <input class="kill_button" type="hidden" name="action" value="killed">
+                        <input class="button" type="submit" value="KILL">
+                    </form>
+                {% elif you.role == 2 %}
 
-                        <form method="get"
-                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                            <input class="rescue_button" type="hidden" name="action" value="rescued">
-                            <input class="button" type="submit" value="Rescue">
-                        </form>
+                    <form method="get"
+                          action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}
+                        <input type="hidden" name="userid" value= {{ p.userId.id }}>
+                        <input class="rescue_button" type="hidden" name="action" value="rescued">
+                        <input class="button" type="submit" value="Rescue">
+                    </form>
 
-                    {% endif %}
-                </div>
-            {% endif %}
+                {% endif %}
+            </div>
+        {% endif %}
     {% endfor %}
 </div>
 <br>
