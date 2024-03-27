@@ -11,8 +11,7 @@
         }
 
 
-
-        h1{
+        h1 {
             font-family: Algerian;
         }
 
@@ -22,12 +21,11 @@
         }
 
         .container {
-         position: relative;
-        bottom: 155px;
+            position: relative;
+            bottom: 155px;
         }
-        
-         
-        
+
+
         a {
             text-decoration: none;
             padding: 5px 10px;
@@ -40,11 +38,11 @@
 
         a:hover {
             background-color: #6d4fa8; /* Darken button on hover for feedback */
-           
+
         }
 
         ol {
-            background-color:#775baf ;
+            background-color: #775baf;
             padding: 20px;
             border-radius: 5px;
             list-style-type: decimal;
@@ -69,7 +67,8 @@
                 padding: 5px;
             }
         }
-        .btn{
+
+        .btn {
             position: fixed;
             bottom: 0px;
             right: 0px;
@@ -94,27 +93,35 @@
         <li>{{ p.userId.username }} {% if p.ready %}ready{% endif %}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobbyid.lobbyId }}/join/" >Join game</a>
-<a href="/lobby/{{ lobbyid.lobbyId }}/leave/" >Leave game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/join/">Join game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/leave/">Leave game</a>
 <a href="/lobby/{{ lobbyid.lobbyId }}/gamestart/" class="btn">Ready</a>
 
 <script>
-   async function JavascriptSucks()
-   {
-       location.reload()
-   }
-        setInterval(JavascriptSucks, 2000)
+    async function JavascriptSucks() {
+        if (window.location.href.includes('join')) {
+            window.location.href = "/lobby/{{ lobbyid.lobbyId }}/"
+        }
+        else{
+            location.reload()
+    }
+    }
+
+    setInterval(JavascriptSucks, 2000)
+    
 
     const JavascriptBad = async () => {
-                const lobby_id = "{{ lobbyid.lobbyId }}";
-                const response = await fetch(`/lobby/` + lobby_id + `/readycheck/`);
-                const unready = await response.text();
-                if (unready == 0) {
-                    window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day"
-                }
-            };
+        const lobby_id = "{{ lobbyid.lobbyId }}";
+        const response = await fetch(`/lobby/` + lobby_id + `/readycheck/`);
+        const unready = await response.text();
+        if ({{ participants_count }} > 0) {
+            if (unready == 0) {
+                window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day"
+            }
+        }
+    };
 
-            setInterval(JavascriptBad, 1000)
+    setInterval(JavascriptBad, 1000)
 
 </script>
 {% if id == 0 %}
