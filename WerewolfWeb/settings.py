@@ -130,6 +130,7 @@ GAME_ROLES = (
     (1, 'Werewolf'),
     (2, 'Doctor'),
     (3, 'DEAD'),
+    (4, 'Spectate')
 )
 
 GAME_CYCLE = (
