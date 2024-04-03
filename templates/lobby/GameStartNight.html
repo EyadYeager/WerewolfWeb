@@ -92,6 +92,12 @@
 {% if you.role == 2 %}
     <h2>Doctor</h2>
 {% endif %}
+{% if you.role == 3 %}
+    <h2 id="role-text">Dead</h2>
+{% endif %}
+{% if you.role == 4 %}
+    <h2 id="role-text">Spectator</h2>
+{% endif %}
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}
@@ -110,7 +116,7 @@
                         <input class="kill_button" type="hidden" name="action" value="killed">
                         <input class="button" type="submit" value="KILL">
                     </form>
-                {% elif you.role == 2 and you.dead == False%}
+                {% elif you.role == 2 and you.dead == False %}
 
                     <form method="get"
                           action="/lobby/{{ lobbyid.lobbyId }}/gamestart/night/">            {% csrf_token %}

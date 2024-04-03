@@ -102,6 +102,12 @@
     {% if you.role == 2 %}
         <h2 id="role-text">Doctor</h2>
     {% endif %}
+    {% if you.role == 3 %}
+        <h2 id="role-text">Dead</h2>
+    {% endif %}
+    {% if you.role == 4 %}
+        <h2 id="role-text">Spectator</h2>
+    {% endif %}
     <script>
         const hideRole = async () => {
             const role = await document.getElementById("role-text");
