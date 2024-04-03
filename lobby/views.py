@@ -201,30 +201,33 @@ class DayView(View):
                         soon_to_be_dead_participant = random.choice(voted_participants)
                         soon_to_be_dead_participant.dead = True
                         soon_to_be_dead_participant.save()
+                    else:
+                        print("everyone's votes are equal")
+                        soon_to_be_dead_participant = random.choice(voted_participants)
 
-                        if werewolves < 1:
-                            lobbyid.game_cycle = 2
-                            lobbyid.save()
-                            return render(request, 'lobby/TownspeopleWin.html',
-                                          {"werewolves": werewolves, "townspeople": townspeople,
-                                           "List_werewolves": List_werewolves})
-                        elif werewolves >= townspeople:
-                            lobbyid.game_cycle = 2
-                            lobbyid.save()
-                            return render(request, 'lobby/WerewolvesWin.html',
-                                          {"werewolves": werewolves, "townspeople": townspeople,
-                                           "List_werewolves": List_werewolves})
-                        lobbyid.game_cycle = 1
+                    if werewolves < 1:
+                        lobbyid.game_cycle = 2
                         lobbyid.save()
-                        hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False)
-                        for k in Participant.objects.filter(lobbyId=lobbyid):
-                            k.ready = False
-                            k.save()
-                        return render(request, 'lobby/GameStartDay.html',
+                        return render(request, 'lobby/TownspeopleWin.html',
                                       {"werewolves": werewolves, "townspeople": townspeople,
-                                       "List_werewolves": List_werewolves,
-                                       'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant,
-                                       "hasnt_voted": hasnt_voted, "you": you})
+                                       "List_werewolves": List_werewolves})
+                    elif werewolves >= townspeople:
+                        lobbyid.game_cycle = 2
+                        lobbyid.save()
+                        return render(request, 'lobby/WerewolvesWin.html',
+                                      {"werewolves": werewolves, "townspeople": townspeople,
+                                       "List_werewolves": List_werewolves})
+                    lobbyid.game_cycle = 1
+                    lobbyid.save()
+                    hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False)
+                    for k in Participant.objects.filter(lobbyId=lobbyid):
+                        k.ready = False
+                        k.save()
+                    return render(request, 'lobby/GameStartDay.html',
+                                  {"werewolves": werewolves, "townspeople": townspeople,
+                                   "List_werewolves": List_werewolves,
+                                   'lobbyid': lobbyid, 'Dead_participant': soon_to_be_dead_participant,
+                                   "hasnt_voted": hasnt_voted, "you": you})
             hasnt_voted = Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False)
 
             return render(request, 'lobby/GameStartDay.html',
