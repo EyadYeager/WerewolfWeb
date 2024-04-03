@@ -48,9 +48,20 @@
 
         .username_box {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* To wrap the player cards */
+            flex-direction: column; /* Change to column layout */
+            align-items: center; /* Center align content horizontally */
+            max-width: 90%; /* Set maximum width to avoid overflowing */
+            margin: 0 auto; /* Center the box horizontally */
+        }
+
+        .username-card-container {
+            width: auto; /* Set width to auto to fit content */
+            background-color: #775baf;
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
+            margin-bottom: 10px; /* Adjust margin between cards */
         }
 
         .username {
@@ -59,16 +70,6 @@
 
         }
 
-        .username-card-container {
-            width: 14rem;
-            height: 6rem;
-            background-color: #775baf;
-            border: 2px solid #000;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
-            margin: 5px; /* Adjust the margin as per your requirement */
-        }
 
     </style>
     <meta charset="UTF-8">
@@ -77,14 +78,14 @@
 <body>
 <h1>Townspeople won</h1>    <br>
 <div class="username_box">
-<div class="username-card-container">
-<p>The Werewolves were:</p>
+    <div class="username-card-container">
+        <p>The Werewolves were:</p>
 
-    {% for k in List_werewolves %}
-        <p class="username">{{ k.userId.username }}</p>
-    {% endfor %}
-    <br>
-</div>
+        {% for k in List_werewolves %}
+            <p class="username">{{ k.userId.username }}</p>
+        {% endfor %}
+        <br>
+    </div>
 </div>
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 </body>

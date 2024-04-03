@@ -37,7 +37,6 @@ class Participant(models.Model):
     ready = models.BooleanField(default=False)
 
 
-
 # class GameCycle(models.Model):
 #     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
 #     is_night = models.BooleanField(default=False)
