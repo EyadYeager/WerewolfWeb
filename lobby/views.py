@@ -150,9 +150,6 @@ class GameStart(View):
 
                 return render(request, 'lobby/GameStartDay.html',
                               {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens, "participants_count": participants_count})
-            else:
-                alert = 6
-                return render(request, 'lobby/alert.html', {"alert": alert, 'lobbyid': lobbyid, "you": you})
 
         return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid, "participants_count": participants_count})
 
@@ -160,8 +157,8 @@ class GameStart(View):
 class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
+        you = Participant.objects.get(userId=request.user.id)
         try:
-            you = Participant.objects.get(userId=request.user.id)
             current_participant_id = 0
             werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
             townspeople = Participant.objects.filter(lobbyId=lobbyid, dead=False, role__in=[0, 2]).count()
@@ -196,7 +193,7 @@ class DayView(View):
                 # check if everyone voted
                 if Participant.objects.filter(lobbyId=lobbyid, dayvoted=False).exclude(dead=True).count() == 0:
 
-                    voted_participants = Participant.objects.filter(lobbyId=lobbyid,
+                    voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
                                                                     vote_count=maxcount['vote_count__max'])
                     # checks if there is only one participant with the most votes
 
