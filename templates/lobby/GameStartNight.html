@@ -83,16 +83,16 @@
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
 <h1>It is nighttime</h1><br>
-{% if you.role == 0 %}
+{% if you.role == 0 and you.dead == False %}
     <h2>Citizen</h2>
 {% endif %}
-{% if you.role == 1 %}
+{% if you.role == 1 and you.dead == False %}
     <h2>Werewolf</h2>
 {% endif %}
-{% if you.role == 2 %}
+{% if you.role == 2 and you.dead == False %}
     <h2>Doctor</h2>
 {% endif %}
-{% if you.role == 3 %}
+{% if you.dead == True %}
     <h2 id="role-text">Dead</h2>
 {% endif %}
 {% if you.role == 4 %}

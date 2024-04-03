@@ -89,20 +89,23 @@
 
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
+{#<form method="get" action="/lobby/{{ lobbyid.lobbyId }}/"> {% csrf_token %} <input type="hidden" name="return" > <input type="submit" value="Get back to lobby"> </form>#}
+
+
 <div id="game-players">
     <div class="players-list">
     </div>
     <h1>It is day time</h1><br>
-    {% if you.role == 0 %}
+    {% if you.role == 0 and you.dead == False %}
         <h2 id="role-text">Citizen</h2>
     {% endif %}
-    {% if you.role == 1 %}
+    {% if you.role == 1 and you.dead == False %}
         <h2 id="role-text">Werewolf</h2>
     {% endif %}
-    {% if you.role == 2 %}
+    {% if you.role == 2 and you.dead == False %}
         <h2 id="role-text">Doctor</h2>
     {% endif %}
-    {% if you.role == 3 %}
+    {% if you.dead == True %}
         <h2 id="role-text">Dead</h2>
     {% endif %}
     {% if you.role == 4 %}
