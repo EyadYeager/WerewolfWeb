@@ -4,13 +4,6 @@ from django.core.validators import MaxValueValidator
 from WerewolfWeb.settings import GAME_STATUS, GAME_CYCLE, GAME_ROLES
 
 
-# class Player(models.Model):
-#     playerId = models.AutoField(User, primary_key=True)
-#     username = models.CharField(User, max_length=20)
-
-# Create your models here.
-
-
 class Lobby(models.Model):
     lobbyId = models.AutoField(primary_key=True)
     lobby_name = models.CharField(max_length=255)
@@ -36,8 +29,3 @@ class Participant(models.Model):
     dead = models.BooleanField(default=False)
     ready = models.BooleanField(default=False)
 
-
-# class GameCycle(models.Model):
-#     lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE)
-#     is_night = models.BooleanField(default=False)
-#
