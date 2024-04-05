@@ -149,7 +149,8 @@ class GameStart(View):
                 lobbyid.save()
 
                 return render(request, 'lobby/GameStartDay.html',
-                              {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens, "participants_count": participants_count})
+                              {'lobbyid': lobbyid, "werewolves": werewolves, "doctors": doctors, "citizens": citizens,
+                               "participants_count": participants_count})
 
         return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid, "participants_count": participants_count})
 
@@ -342,7 +343,7 @@ class WerewolvesView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
         lobbyid.game_status = 0
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0

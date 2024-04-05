@@ -2,6 +2,43 @@
 <html lang="en">
 <head>
     <title>Night</title>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const playButtons = document.querySelectorAll(".button");
+            if (playButtons.length > 0) {
+                playButtons.forEach(button => {
+                    button.addEventListener("click", function (event) {
+                        event.preventDefault(); // Prevent the default form submission
+                        playAudio(button.closest("form")); // Pass the form to playAudio function
+                    });
+                });
+            } else {
+                console.error("Play buttons not found.");
+            }
+        });
+
+        function playAudio(form) {
+            const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/arcade-retro-game-over-213%20-%20Copy.mp3");
+            audio.play().then(() => {
+                console.log("Audio playback started successfully.");
+                setTimeout(() => {
+                    form.submit(); // Submit the form after audio playback
+                }, audio.duration * 1000); // Wait for the duration of the audio
+            }).catch((error) => {
+                console.error("Error occurred during audio playback:", error);
+            });
+        }
+
+        const hideRole = async () => {
+            const role = await document.getElementById("role-text");
+            if (role.style.display === "none") {
+                role.style.display = "block";
+            } else {
+                role.style.display = "none";
+            }
+        }
+    </script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
