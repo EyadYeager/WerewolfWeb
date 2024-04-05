@@ -6,7 +6,7 @@
             if (doWeReload !== 'Nah') {
                 await localStorage.setItem("Reload", "Nah");
                 location.reload();
-                
+
             }
         }
         const localStorageGenocide = () => {
@@ -24,10 +24,12 @@
             text-align: center; /* Center align the content */
             font-size: 20px;
         }
+
         h1 {
             color: #775baf;
             font-family: Algerian;
         }
+
         a {
             display: inline-block;
             background-color: #775baf;
@@ -37,9 +39,11 @@
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
         }
+
         a:hover {
             background-color: #775baf; /* Darken the button upon hover */
         }
+
         .button {
             display: inline-block;
             background-color: #a156fc;
@@ -49,16 +53,19 @@
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
         }
+
         .username_box {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap; /* To wrap the player cards */
         }
+
         .username {
             font-size: 24px;
             color: ghostwhite;
         }
+
         .username-card-container {
             width: 14rem;
             height: 6rem;
@@ -68,6 +75,17 @@
             padding: 20px;
             box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
             margin: 5px; /* Adjust the margin as per your requirement */
+        }
+
+        .dead_list {
+            background-color: rgba(119, 91, 175, 0.76);
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 998;
+            padding: 40px;
+            font-size: larger;
+
         }
     </style>
     <title>Werewolf</title></head>
@@ -129,13 +147,20 @@
             {% endfor %}
         </div>
         {% if Dead_participant %}
-            <ul>{{ Dead_participant.userId.username }} is dead</ul>
+            <ul>{{ Dead_participant.userId.username }} is voted out</ul>
         {% endif %}
         <div id="hi">
+
             <br>
             <h3> People who haven't voted </h3>
         </div>
         <button onclick="hideRole()" class="button">Show/Hide role</button>
+        <div class="dead_list">
+            <p>dead players are: <br></p>
+            {% for participant in dead_participant %}
+                <ul>{{ participant.userId.username }} </ul>
+            {% endfor %}
+        </div>
         <script>
             const JavascriptSucks = async () => {
                 const lobby_id = "{{ lobbyid.lobbyId }}";
@@ -161,7 +186,7 @@
                 console.log(hi)
                 hi.innerHTML = `<br> <h3> People who haven't voted </h3> <p> ${didNotVote}</p>`
             }, 2000)
-            
+
         </script>
         <div class="players-footer">
             <div class="dots" style="display: none;">

@@ -12,10 +12,12 @@
             text-align: center; /* Center align the content */
             padding-top: 50px; /* Add some space on the top */
         }
+
         h1 {
             color: #775baf;
             font-family: Algerian;
         }
+
         a {
             display: inline-block;
             background-color: #775baf;
@@ -26,9 +28,11 @@
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
         }
+
         a:hover {
             background-color: #775baf; /* Darken the button upon hover */
         }
+
         .button {
             display: inline-block;
             background-color: #775baf;
@@ -38,16 +42,19 @@
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
         }
+
         .username_box {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap; /* To wrap the player cards */
         }
+
         .username {
             font-size: 24px;
             color: ghostwhite;
         }
+
         .username-card-container {
             width: 14rem;
             height: 6rem;
@@ -58,11 +65,25 @@
             box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
             margin: 5px; /* Adjust the margin as per your requirement */
         }
+
         .kill_button {
             color: red;
         }
+
         .rescue_button {
             color: #13b613;
+        }
+
+        .dead_list {
+            background-color: rgba(119, 91, 175, 0.76);
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            z-index: 998;
+            padding: 40px;
+            font-size: larger;
+            color: ghostwhite;
+
         }
     </style>
 </head>
@@ -114,10 +135,18 @@
     {% endfor %}
 </div>
 <br>
-{% for participant in dead_participants %}
-    <ul>{{ participant.userId.username }} is dead</ul>
-{% endfor %}
+{% if Dead_participant %}
+    <ul>{{ Dead_participant.userId.username }} is killed</ul>
+{% endif %}
+
+
 <div id="hi">
+</div>
+<div class="dead_list">
+    <p>dead players are: <br></p>
+    {% for participant in dead_participants %}
+        <ul>{{ participant.userId.username }} </ul>
+    {% endfor %}
 </div>
 <script>
     async function JavascriptSucks() {
@@ -134,6 +163,7 @@
             window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/townspeople/"
         }
     }
+
     setInterval(JavascriptSucks, 2000)
 </script>
 </body>
