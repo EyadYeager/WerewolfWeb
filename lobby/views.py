@@ -5,7 +5,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View, generic
 from django.http import HttpResponse
-
 from lobby.models import Lobby, Participant
 
 
