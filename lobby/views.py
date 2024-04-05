@@ -217,6 +217,7 @@ class DayView(View):
                         print("No votes or everyone's votes are equal.")
                     voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
                                                                     vote_count=maxcount['vote_count__max'])
+                    soon_to_be_dead_participant = voted_participants
                     # # checks if there is only one participant with the most votes
                     #
                     # if voted_participants.count() > 0:
