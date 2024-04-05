@@ -76,12 +76,11 @@
         <input class="searchbar" type="text" name="name" placeholder="Lobby Name">
         <button class="searchbutton" type="submit">Submit</button>
     </form>
-{% if error %}
-    <div class="error">{{ error }}</div>
-{% endif %}
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
 
 </div>
-
 
 
 </body>
