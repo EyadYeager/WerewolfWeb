@@ -158,6 +158,8 @@ class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
         you = Participant.objects.get(userId=request.user.id)
+        if "return" in request.GET:
+            you.ready = False
         try:
             current_participant_id = 0
             werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
@@ -191,19 +193,39 @@ class DayView(View):
                 maxcount = Participant.objects.filter(lobbyId=lobbyid).aggregate(Max("vote_count"))
 
                 # check if everyone voted
-                if Participant.objects.filter(lobbyId=lobbyid, dayvoted=False).exclude(dead=True).count() == 0:
+                if Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False).count() == 0:
+                    maxcount = Participant.objects.filter(lobbyId=lobbyid, dead=False).aggregate(Max("vote_count"))
+                    print(f"Max vote count is: {maxcount['vote_count__max']}")
 
+                    # After ensuring all votes are cast
                     voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
                                                                     vote_count=maxcount['vote_count__max'])
-                    # checks if there is only one participant with the most votes
+                    print(f"Number of participants with max votes: {voted_participants.count()}")
 
-                    if voted_participants.count() > 0:
-                        soon_to_be_dead_participant = random.choice(voted_participants)
+                    if voted_participants.count() == 1:
+                        # If there's a clear participant with the highest votes
+                        soon_to_be_dead_participant = voted_participants.first()
+                        soon_to_be_dead_participant.dead = True
+                        soon_to_be_dead_participant.save()
+                    elif voted_participants.count() > 1:
+                        # Handling ties explicitly
+                        soon_to_be_dead_participant = random.choice(list(voted_participants))
                         soon_to_be_dead_participant.dead = True
                         soon_to_be_dead_participant.save()
                     else:
-                        print("everyone's votes are equal")
-                        soon_to_be_dead_participant = random.choice(voted_participants)
+                        print("No votes or everyone's votes are equal.")
+                    voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
+                                                                    vote_count=maxcount['vote_count__max'])
+                    # # checks if there is only one participant with the most votes
+                    #
+                    # if voted_participants.count() > 0:
+                    #     soon_to_be_dead_participant = random.choice(voted_participants)
+                    #     soon_to_be_dead_participant.dead = True
+                    #     soon_to_be_dead_participant.save()
+                    # else:
+                    #     print(voted_participants.count())
+                    #     print("everyone's votes are equal")
+                    #     soon_to_be_dead_participant = voted_participants
 
                     if werewolves < 1:
                         lobbyid.game_cycle = 2
@@ -244,7 +266,7 @@ class NightView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2], dead=False).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
         doctors = Participant.objects.filter(lobbyId=lobbyid, role=2, dead=False).count()
 
         for everyone in Participant.objects.filter(lobbyId=lobbyid, dead=False):
@@ -264,7 +286,7 @@ class NightView(View):
                         current_participant.killed += 1
                         you.nightvoted = True
                         you.save()
-                    elif you.role == 1 and you.nightvoted:
+                    else:
                         night_alert = 0
                         return render(request, 'lobby/alert.html', {'night_alert': night_alert, 'lobbyid': lobbyid})
                 else:
@@ -272,7 +294,7 @@ class NightView(View):
                         current_participant.rescued += 1
                         you.nightvoted = True
                         you.save()
-                    elif you.role == 2 and you.nightvoted:
+                    else:
                         night_alert = 0
                         return render(request, 'lobby/alert.html', {'night_alert': night_alert, 'lobbyid': lobbyid})
                 current_participant.save()
@@ -320,7 +342,7 @@ class WerewolvesView(View):
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
-        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
+        List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1,)
         lobbyid.game_status = 0
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0
