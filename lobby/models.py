@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.db import models
 from django.core.validators import MaxValueValidator
@@ -29,3 +30,12 @@ class Participant(models.Model):
     dead = models.BooleanField(default=False)
     ready = models.BooleanField(default=False)
 
+
+class Message(models.Model):
+    lobbyId = models.ForeignKey(Lobby, on_delete=models.CASCADE)
+    userId = models.ForeignKey(Participant, on_delete=models.CASCADE)
+    message = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.message
