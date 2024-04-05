@@ -24,6 +24,52 @@
                 });
             });
         });
+        
+                document.addEventListener('DOMContentLoaded', () => {
+            const readyButton = document.getElementById("Leave_Button");
+
+            readyButton.addEventListener("click", (event) => {
+                event.preventDefault(); // Prevent the default link action
+                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/BYE-BYE.mp3");
+
+                audio.play().then(() => {
+                    console.log("Audio playback started successfully.");
+                    // Proceed with the original action after a slight delay following audio completion
+                    setTimeout(() => {
+                        window.location.href = readyButton.getAttribute('href');
+                    }, audio.duration * 1000); // Use the audio duration for a dynamic delay
+                }).catch((error) => {
+                    console.error("Error occurred during audio playback:", error);
+                    // Fallback: Proceed with the original action after a slight delay in case of playback error
+                    setTimeout(() => {
+                        window.location.href = readyButton.getAttribute('href');
+                    }, 1000);
+                });
+            });
+        });
+        
+                                document.addEventListener('DOMContentLoaded', () => {
+            const readyButton = document.getElementById("Join_Button");
+
+            readyButton.addEventListener("click", (event) => {
+                event.preventDefault(); // Prevent the default link action
+                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/Wellcome.mp3");
+
+                audio.play().then(() => {
+                    console.log("Audio playback started successfully.");
+                    // Proceed with the original action after a slight delay following audio completion
+                    setTimeout(() => {
+                        window.location.href = readyButton.getAttribute('href');
+                    }, audio.duration * 1000); // Use the audio duration for a dynamic delay
+                }).catch((error) => {
+                    console.error("Error occurred during audio playback:", error);
+                    // Fallback: Proceed with the original action after a slight delay in case of playback error
+                    setTimeout(() => {
+                        window.location.href = readyButton.getAttribute('href');
+                    }, 1000);
+                });
+            });
+        });
     </script>
     <style>
         body {
@@ -115,8 +161,8 @@
         <li>{{ p.userId.username }} {% if p.ready %}ready{% endif %}</li>
     {% endfor %}
 </ol>
-<a href="/lobby/{{ lobbyid.lobbyId }}/join/">Join game</a>
-<a href="/lobby/{{ lobbyid.lobbyId }}/leave/">Leave game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/join/" id="Join_Button">Join game</a>
+<a href="/lobby/{{ lobbyid.lobbyId }}/leave/" id="Leave_Button">Leave game</a>
 <a href="/lobby/{{ lobbyid.lobbyId }}/gamestart/" id="Ready_Button" class="btn">Ready</a>
 
 <script>
@@ -130,7 +176,7 @@
         }
     }
 
-    setInterval(JavascriptSucks, 2000)
+    setInterval(JavascriptSucks, 4000)
 
 
     const JavascriptBad = async () => {
@@ -144,7 +190,7 @@
         }
     };
 
-    setInterval(JavascriptBad, 1000)
+    setInterval(JavascriptBad, 3000)
 
 
 </script>
