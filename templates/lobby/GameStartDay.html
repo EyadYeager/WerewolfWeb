@@ -17,12 +17,11 @@
         reloadPageFunction();
 
 
-
         document.addEventListener('DOMContentLoaded', () => {
             const playButtons = document.querySelectorAll("[id^='Play_Button']");
             if (playButtons.length > 0) {
                 playButtons.forEach(button => {
-                    button.addEventListener("click", function(event) {
+                    button.addEventListener("click", function (event) {
                         event.preventDefault(); // Prevent the default form submission
                         playAudio(button.closest("form")); // Pass the form to playAudio function
                     });
