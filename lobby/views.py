@@ -48,8 +48,6 @@ class LobbyJoinView(View):
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
         print(participants_count)
-        participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
-        # print(request.user)
         try:
             if participant_check > 0:
                 alert = 4
@@ -72,14 +70,13 @@ class LobbyJoinView(View):
 
 class LobbyLeaveView(View):
     def get(self, request, id):
-        you = request.user.id
         lobbyid = Lobby.objects.get(lobbyId=id)
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
         participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
 
         try:
-            for l in participants:
-                l.delete()
+            for p in participants:
+                p.delete()
 
         except Lobby.DoesNotExist:
             redirect('/lobby/')
@@ -88,7 +85,6 @@ class LobbyLeaveView(View):
 
 class LobbyCreateView(View):
     def get(self, request):
-        name = ""
         return render(request, 'lobby/CreateLobby.html')
 
     def post(self, request):
@@ -192,7 +188,6 @@ class DayView(View):
                 # change the voted status after nighttime
                 current_participant.vote_count += 1
                 current_participant.save()
-                maxcount = Participant.objects.filter(lobbyId=lobbyid).aggregate(Max("vote_count"))
 
                 # check if everyone voted
                 if Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False).count() == 0:
