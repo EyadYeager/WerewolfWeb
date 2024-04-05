@@ -2,31 +2,27 @@
 <html lang="en">
 <head>
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const playAudio = (event) => {
-            event.preventDefault(); // Prevent default behavior
+            document.addEventListener('DOMContentLoaded', () => {
+        const readyButton = document.getElementById("Ready_Button");
+
+        readyButton.addEventListener("click", (event) => {
+            event.preventDefault(); // Prevent the default link action
             const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/ready.mp3");
+
             audio.play().then(() => {
                 console.log("Audio playback started successfully.");
-                // Delay redirect after audio playback for 3 seconds (adjust as needed)
+                // Proceed with the original action after a slight delay following audio completion
                 setTimeout(() => {
-                    window.location.href = event.target.href;
-                }, 3000); // Redirect after 3 seconds
+                    window.location.href = readyButton.getAttribute('href');
+                }, audio.duration * 1000); // Use the audio duration for a dynamic delay
             }).catch((error) => {
                 console.error("Error occurred during audio playback:", error);
-                // If audio playback fails, still redirect after a short delay
+                // Fallback: Proceed with the original action after a slight delay in case of playback error
                 setTimeout(() => {
-                    window.location.href = event.target.href;
-                }, 1000); // Redirect after 1 second
+                    window.location.href = readyButton.getAttribute('href');
+                }, 1000);
             });
-        };
-
-        const readyButton = document.getElementById("Ready_Button");
-        if (readyButton) {
-            readyButton.addEventListener("click", playAudio);
-        } else {
-            console.error("Ready button not found.");
-        }
+        });
     });
     </script>
     <style>
@@ -98,13 +94,11 @@
 
         .btn {
             position: fixed;
-            bottom: 0px;
-            right: 0px;
+            bottom: 0;
+            right: 0;
             z-index: 998;
             padding: 40px;
             font-size: larger;
-
-
         }
     </style>
     <meta charset="UTF-8">
@@ -126,6 +120,8 @@
 <a href="/lobby/{{ lobbyid.lobbyId }}/gamestart/" id="Ready_Button" class="btn">Ready</a>
 
 <script>
+
+
     async function JavascriptSucks() {
         if (window.location.href.includes('join')) {
             window.location.href = "/lobby/{{ lobbyid.lobbyId }}/"
@@ -149,6 +145,7 @@
     };
 
     setInterval(JavascriptBad, 1000)
+
 
 </script>
 {% if id == 0 %}
