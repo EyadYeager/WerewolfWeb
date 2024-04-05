@@ -73,20 +73,26 @@
 
     </style>
     <meta charset="UTF-8">
-    <title>Townspeople Won</title>
+   <title>Townspeople Won</title>
 </head>
 <body>
-<h1>Townspeople won</h1>    <br>
+<h1>Townspeople won</h1><br>
 <div class="username_box">
-    <div class="username-card-container">
-        <p>The Werewolves were:</p>
-
-        {% for k in List_werewolves %}
-            <p class="username">{{ k.userId.username }}</p>
-        {% endfor %}
-        <br>
-    </div>
+   <div class="username-card-container">
+       <p>The Werewolves were:</p>
+       {% for k in List_werewolves %}
+           <p class="username">{{ k.userId.username }}</p>
+       {% endfor %}
+       <br>
+   </div>
 </div>
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
+
+<!-- Audio Autoplay -->
+<audio autoplay>
+    <source src="https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/yippee-tbh.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+
 </body>
 </html>
