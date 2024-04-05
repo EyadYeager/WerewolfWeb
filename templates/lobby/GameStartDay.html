@@ -157,7 +157,7 @@
         <button onclick="hideRole()" class="button">Show/Hide role</button>
         <div class="dead_list">
             <p>dead players are: <br></p>
-            {% for participant in dead_participant %}
+            {% for participant in dead_participants %}
                 <ul>{{ participant.userId.username }} </ul>
             {% endfor %}
         </div>

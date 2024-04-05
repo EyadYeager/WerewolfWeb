@@ -126,18 +126,9 @@ class GameStart(View):
             participants = Participant.objects.filter(lobbyId=lobbyid)
 
             # this code is for giving roles
-            participants_list = list(participants)
-            random.shuffle(participants_list)
-            # Assign roles within each group of 4 participants
-            for i, participant in enumerate(participants_list, start=1):
-                remainder = i % 4
-                if remainder == 1:
-                    participant.role = 1  # Assign werewolf
-                elif remainder == 2:
-                    participant.role = 2  # Assign doctor
-                else:
-                    participant.role = 0  # Assign citizen (for remainder 0 and 3)
-                participant.save()
+
+            # Role distribution logic
+            self.assign_roles(participants)
 
             if lobbyid.game_status == 0:
                 lobbyid.game_status = 1
@@ -149,6 +140,22 @@ class GameStart(View):
 
         return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid, "participants_count": participants_count})
 
+    def assign_roles(self, participants):
+        total_participants = participants.count()
+        werewolves_count = total_participants // 7 + 1  # Plus one for the initial werewolf
+        doctors_count = total_participants // 6 + 1  # Plus one for the initial doctor
+
+        werewolves_count = max(werewolves_count, 1)
+        doctors_count = max(doctors_count, 1)
+
+        citizens_count = total_participants - werewolves_count - doctors_count
+        roles = [1] * werewolves_count + [2] * doctors_count + [0] * citizens_count
+
+        random.shuffle(roles)
+
+        for participant, role in zip(participants.all(), roles):
+            participant.role = role
+            participant.save()
 
 class DayView(View):
     def get(self, request, id):
