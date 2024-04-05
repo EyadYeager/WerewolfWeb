@@ -9,48 +9,10 @@
                 return;
             }
         }
-
         const localStorageGenocide = () => {
             localStorage.removeItem("Reload")
         }
-
         reloadPageFunction();
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const playButtons = document.querySelectorAll("[id^='Play_Button']");
-            if (playButtons.length > 0) {
-                playButtons.forEach(button => {
-                    button.addEventListener("click", function (event) {
-                        event.preventDefault(); // Prevent the default form submission
-                        playAudio(button.closest("form")); // Pass the form to playAudio function
-                    });
-                });
-            } else {
-                console.error("Play buttons not found.");
-            }
-        });
-
-        function playAudio(form) {
-            const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/arcade-retro-game-over-213%20-%20Copy.mp3");
-            audio.play().then(() => {
-                console.log("Audio playback started successfully.");
-                setTimeout(() => {
-                    form.submit(); // Submit the form after audio playback
-                }, audio.duration * 1000); // Wait for the duration of the audio
-            }).catch((error) => {
-                console.error("Error occurred during audio playback:", error);
-            });
-        }
-
-        const hideRole = async () => {
-            const role = await document.getElementById("role-text");
-            if (role.style.display === "none") {
-                role.style.display = "block";
-            } else {
-                role.style.display = "none";
-            }
-        }
     </script>
     <style>
         body {
@@ -61,14 +23,11 @@
             color: #333;
             text-align: center; /* Center align the content */
             font-size: 20px;
-
         }
-
         h1 {
             color: #775baf;
             font-family: Algerian;
         }
-
         a {
             display: inline-block;
             background-color: #775baf;
@@ -77,13 +36,10 @@
             border-radius: 5px; /* Rounded corners for the links */
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
-
         }
-
         a:hover {
             background-color: #775baf; /* Darken the button upon hover */
         }
-
         .button {
             display: inline-block;
             background-color: #a156fc;
@@ -92,22 +48,17 @@
             border-radius: 5px; /* Rounded corners for the links */
             text-decoration: none; /* Remove underline from links */
             transition: background-color 0.3s; /* Smooth transition for hover effect */
-
         }
-
         .username_box {
             display: flex;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap; /* To wrap the player cards */
         }
-
         .username {
             font-size: 24px;
             color: ghostwhite;
-
         }
-
         .username-card-container {
             width: 14rem;
             height: 6rem;
@@ -118,10 +69,8 @@
             box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
             margin: 5px; /* Adjust the margin as per your requirement */
         }
-
     </style>
-    <title>Werewolf</title>
-</head>
+    <title>Werewolf</title></head>
 <body onunload="localStorageGenocide();">
 
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
@@ -148,10 +97,18 @@
     {% if you.role == 4 %}
         <h2 id="role-text">Spectator</h2>
     {% endif %}
-
+    <script>
+        const hideRole = async () => {
+            const role = await document.getElementById("role-text");
+            if (role.style.display === "none") {
+                role.style.display = "block";
+            } else {
+                role.style.display = "none";
+            }
+        }
+    </script>
     <div class="player-info">
         <div class="username_box">
-
             {% for p in lobbyid.participants.all %}
                 {% if p.dead == False %}
                     <div class="username-card-container">
@@ -160,10 +117,11 @@
                         {% else %}
                             <p class="username">{{ p.userId.username }} </p>
                         {% endif %}
-                        <form method="get" action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">
-                            {% csrf_token %}
-                            <input type="hidden" name="userid" value= {{ p.userId.id }}>
-                            <input class="button" type="submit" id="Play_Button_{{ p.userId.id }}" value="Vote">
+                        <form method="get"
+                              action="/lobby/{{ lobbyid.lobbyId }}/gamestart/day/">            {% csrf_token %}
+                            <input type="hidden" name="userid" value= {{ p.userId.id }}><input class="button"
+                                                                                               type="submit"
+                                                                                               value="Vote">
                         </form>
                     </div>
                     <br>
@@ -177,9 +135,7 @@
             <br>
             <h3> People who haven't voted </h3>
         </div>
-
         <button onclick="hideRole()" class="button">Show/Hide role</button>
-
         <script>
             const JavascriptSucks = async () => {
                 const lobby_id = "{{ lobbyid.lobbyId }}";
@@ -195,22 +151,17 @@
                     window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/townspeople/"
                 }
             };
-
             setInterval(JavascriptSucks, 2000)
-
             setInterval(async () => {
                 console.log('hi')
-
                 const lobby_id = "{{ lobbyid.lobbyId }}";
                 const response = await fetch(`/lobby/` + lobby_id + `/gamestart/daycheck/`);
                 const didNotVote = await response.text();
-
                 const hi = await document.getElementById('hi')
                 console.log(hi)
                 hi.innerHTML = `<br> <h3> People who haven't voted </h3> <p> ${didNotVote}</p>`
             }, 2000)
         </script>
-
         <div class="players-footer">
             <div class="dots" style="display: none;">
                 <div class="dot active">
@@ -220,6 +171,5 @@
         </div>
     </div>
 </div>
-
 </body>
 </html>
