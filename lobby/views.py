@@ -157,6 +157,7 @@ class GameStart(View):
             participant.role = role
             participant.save()
 
+
 class DayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)

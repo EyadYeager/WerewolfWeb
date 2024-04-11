@@ -156,49 +156,50 @@
         </div>
         <button onclick="hideRole()" class="button">Show/Hide role</button>
         {% if you.role == 1 %}
-        <div id="chat-box">
-    <div id="messages"></div>
-    <input type="text" id="chat-message" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
-</div>
+            <div id="chat-box">
+                <div id="messages"></div>
+                <input type="text" id="chat-message" placeholder="Type a message...">
+                <button onclick="sendMessage()">Send</button>
+            </div>
 
-<script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script>
-    const socket = io('http://146.190.21.110:5000');
+            <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+            <script>
+                const socket = io('http://146.190.21.110:5000');
 
-    socket.on('message', function(message) {
-        const messageElement = document.createElement('div');
-        messageElement.textContent = message;
-        document.getElementById('messages').appendChild(messageElement);
-    });
+                socket.on('message', function (message) {
+                    const messageElement = document.createElement('div');
+                    messageElement.textContent = message;
+                    document.getElementById('messages').appendChild(messageElement);
+                });
 
-    function sendMessage() {
-        const messageInput = document.getElementById('chat-message');
-        const message = messageInput.value;
-        socket.emit('message', message);
-        messageInput.value = '';
-    }
-</script>
+                function sendMessage() {
+                    const messageInput = document.getElementById('chat-message');
+                    const message = messageInput.value;
+                    socket.emit('message', message);
+                    messageInput.value = '';
+                }
+            </script>
 
-<style>
-    /* Add your styles for the chat box here */
-    #chat-box {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 300px;
-        background-color: white;
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-    #messages {
-        height: 200px;
-        overflow-y: auto;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        padding: 5px;
-    }
-</style>
+            <style>
+                /* Add your styles for the chat box here */
+                #chat-box {
+                    position: fixed;
+                    bottom: 0;
+                    left: 0;
+                    width: 300px;
+                    background-color: white;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                }
+
+                #messages {
+                    height: 200px;
+                    overflow-y: auto;
+                    margin-bottom: 10px;
+                    border: 1px solid #ccc;
+                    padding: 5px;
+                }
+            </style>
         {% endif %}
         <div class="dead_list">
             <p>dead players are: <br></p>

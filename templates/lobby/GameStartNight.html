@@ -144,7 +144,7 @@
 </div>
 
 
-        <div id="chat-box">
+<div id="chat-box">
     <div id="messages"></div>
     <input type="text" id="chat-message" placeholder="Type a message...">
     <button onclick="sendMessage()">Send</button>
@@ -154,7 +154,7 @@
 <script>
     const socket = io('http://146.190.21.110:5000');
 
-    socket.on('message', function(message) {
+    socket.on('message', function (message) {
         const messageElement = document.createElement('div');
         messageElement.textContent = message;
         document.getElementById('messages').appendChild(messageElement);
@@ -179,6 +179,7 @@
         padding: 10px;
         border: 1px solid #ddd;
     }
+
     #messages {
         height: 200px;
         overflow-y: auto;
