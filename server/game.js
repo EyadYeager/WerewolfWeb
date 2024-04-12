@@ -29,8 +29,8 @@ const hideName = async () => {
 }
 
 const hideChat = async () => {
-    const chat = await document.getElementById("chatbox-div");
-    if (chat.style.display === "none" || chat.style.display === "") {
+    const chat = await document.getElementById("chat-box");
+    if ( chat.style.display === "none" || chat.style.display === "") {
         chat.style.display = "block";
     } else {
         chat.style.display = "none";

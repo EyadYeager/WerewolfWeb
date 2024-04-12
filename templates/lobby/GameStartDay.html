@@ -108,6 +108,7 @@
             background-color: white;
             padding: 10px;
             border: 1px solid #ddd;
+            display: none;
         }
 
         #messages {
@@ -123,9 +124,7 @@
             display: none;
         }
 
-        #chatbox-div {
-            display: none;
-        }
+
     </style>
     <title>Werewolf</title></head>
 <body onunload="localStorageGenocide();">
@@ -186,15 +185,13 @@
         </div>
         <button onclick="oneButtonDoBothThings()" class="button">Show/Hide role and chadbox</button>
         {% if you.role == 1 %}
-            <div id="chatbox-div">
                 <div id="chat-box">
                     <div id="messages"></div>
                     <input type="text" id="chat-message" placeholder="Type a message...">
                     <button onclick="sendMessage('{{ you.userId.username }}')">Send</button>
                 </div>
         {% endif %}
-                <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-            </div>
+                <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>\
         <div class="dead_list">
             <p>dead players are: <br></p>
             {% for participant in dead_participants %}
