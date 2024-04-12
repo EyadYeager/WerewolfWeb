@@ -192,11 +192,9 @@
                     <input type="text" id="chat-message" placeholder="Type a message...">
                     <button onclick="sendMessage('{{ you.userId.username }}')">Send</button>
                 </div>
-
-                <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-
-            </div>
         {% endif %}
+                <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+            </div>
         <div class="dead_list">
             <p>dead players are: <br></p>
             {% for participant in dead_participants %}
