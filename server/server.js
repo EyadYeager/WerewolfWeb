@@ -12,6 +12,11 @@ const io = socketIo(server, {
         methods: ["GET", "POST"] // Allowed HTTP request methods for CORS requests
     }
 });
+
+app.get('/game.js', (req, res) => {
+  res.sendFile(__dirname + '/game.js');
+});
+
 io.on('connection', (socket) => {
     console.log('User connected');
     // Listen for incoming messages

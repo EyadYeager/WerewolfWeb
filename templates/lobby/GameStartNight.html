@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <title>Night</title>
+    <script src="http://146.190.21.110:5000/game.js"></script>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -52,8 +53,17 @@
 
         .username {
             font-size: 24px;
+            color: ghostwhite !important;
+        }
+
+        #name-text {
             color: ghostwhite;
         }
+
+        .werewolf {
+            color: #770303 !important;
+        }
+
 
         .username-card-container {
             width: 14rem;
@@ -85,6 +95,33 @@
             color: ghostwhite;
 
         }
+
+        #chat-box {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 300px;
+            background-color: white;
+            padding: 10px;
+            border: 1px solid #ddd;
+            display: none;
+        }
+
+        #messages {
+            height: 200px;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            padding: 5px;
+        }
+
+        .role-text {
+            display: none;
+        }
+
+        #chatbox-div {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -92,26 +129,26 @@
 
 <h1>It is nighttime</h1><br>
 {% if you.role == 0 and you.dead == False %}
-    <h2>Citizen</h2>
+    <h2 id="role-text" class="role-text">Citizen</h2>
 {% endif %}
 {% if you.role == 1 and you.dead == False %}
-    <h2>Werewolf</h2>
+    <h2 id="role-text" class="role-text">Werewolf</h2>
 {% endif %}
 {% if you.role == 2 and you.dead == False %}
-    <h2>Doctor</h2>
+    <h2 id="role-text" class="role-text">Doctor</h2>
 {% endif %}
 {% if you.dead == True %}
-    <h2 id="role-text">Dead</h2>
+    <h2 id="role-text" class="role-text">Dead</h2>
 {% endif %}
 {% if you.role == 4 %}
-    <h2 id="role-text">Spectator</h2>
+    <h2 id="role-text" class="role-text">Spectator</h2>
 {% endif %}
 <div class="username_box">
     {% for p in lobbyid.participants.all %}
         {% if p.dead == False %}
             <div class="username-card-container">
                 {% if you.role == 1 and p.role == 1 %}
-                    <p class="username" style="color: #780403">{{ p.userId.username }} </p>
+                    <p class="username name-text">{{ p.userId.username }} </p>
                 {% else %}
                     <p class="username">{{ p.userId.username }}
                 {% endif %}
@@ -139,55 +176,22 @@
     <ul>{{ Dead_participant.userId.username }} is killed</ul>
 {% endif %}
 
+<button onclick="oneButtonDoBothThings()" class="button">Show/Hide role and chadbox</button>
+
 
 <div id="hi">
 </div>
+{% if you.role == 1 %}
+    <div id="chat-box">
+        <div id="messages"></div>
+        <input type="text" id="chat-message" placeholder="Type a message...">
+        <button onclick="sendMessage('{{ you.userId.username }}')">Send</button>
+    </div>
+{% endif %}
 
-
-<div id="chat-box">
-    <div id="messages"></div>
-    <input type="text" id="chat-message" placeholder="Type a message...">
-    <button onclick="sendMessage()">Send</button>
-</div>
 
 <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-<script>
-    const socket = io('http://146.190.21.110:5000');
 
-    socket.on('message', function (message) {
-        const messageElement = document.createElement('div');
-        messageElement.textContent = message;
-        document.getElementById('messages').appendChild(messageElement);
-    });
-
-    function sendMessage() {
-        const messageInput = document.getElementById('chat-message');
-        const message = messageInput.value;
-        socket.emit('message', message);
-        messageInput.value = '';
-    }
-</script>
-
-<style>
-    /* Add your styles for the chat box here */
-    #chat-box {
-        position: fixed;
-        bottom: 0;
-        right: 0;
-        width: 300px;
-        background-color: white;
-        padding: 10px;
-        border: 1px solid #ddd;
-    }
-
-    #messages {
-        height: 200px;
-        overflow-y: auto;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        padding: 5px;
-    }
-</style>
 
 <div class="dead_list">
     <p>dead players are: <br></p>
@@ -196,6 +200,8 @@
     {% endfor %}
 </div>
 <script>
+    SetupChat('{{ you.userId.username }}');
+
     async function JavascriptSucks() {
         const lobby_id = "{{ lobbyid.lobbyId }}";
         const response = await fetch(`/lobby/` + lobby_id + `/gamestart/cyclecheck/`);
