@@ -1,0 +1,89 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Algerian;
+
+}
+
+body {
+    font-size: 16px;
+    margin: 20px;
+    background-color: #18544f;
+    color: ghostwhite;
+}
+
+h1 {
+    margin-bottom: 20px;
+    position: relative;
+    color: ghostwhite;
+    background-color: #775baf;
+    text-align: center;
+}
+
+.button-logout {
+    padding: 10px 20px;
+    background-color: #775baf;
+    color: ghostwhite;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.button-logout:hover {
+    background-color: #6d4fa8; /* Darken button on hover for feedback */
+}
+
+.container {
+    display: flex;
+    justify-content: flex-end; /* Align items to the right */
+    margin-bottom: 20px;
+}
+
+ol {
+    background-color: #775baf;
+    padding: 20px;
+    border-radius: 5px;
+    list-style-position: inside;
+}
+
+li {
+    display: flex;
+    justify-content: space-between; /* This will space out the lobby name and the status */
+    margin-bottom: 10px; /* Adds some space below each list item */
+}
+
+.status {
+    margin-left: auto; /* Pushes the status to the right */
+}
+
+
+a {
+    text-decoration: none;
+    color: ghostwhite;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.fonts, button.fonts {
+    font-size: 16px;
+    padding: 10px 20px;
+    background-color: #775baf;
+    color: ghostwhite;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    display: inline-block; /* Allows styling similar to a button */
+    margin: 10px 0; /* Adds some spacing around the link/button */
+}
+
+button.fonts:hover, .fonts:hover {
+    background-color: #6d4fa8; /* Darken button on hover for feedback */
+
+}
+

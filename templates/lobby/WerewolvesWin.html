@@ -1,67 +1,8 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-image: url("https://i.ibb.co/2dWB40L/Werewolves.png");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-attachment: fixed;
-            background-size: cover;
-            color: #770303;
-            text-align: center; /* Center align the content */
-            font-size: 20px;
-
-        }
-
-        h1 {
-            color: #775baf;
-            font-family: Algerian;
-        }
-
-        a {
-            display: inline-block;
-            background-color: #775baf;
-            color: ghostwhite;
-            padding: 10px 20px;
-            border-radius: 5px; /* Rounded corners for the links */
-            text-decoration: none; /* Remove underline from links */
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
-
-        }
-
-        a:hover {
-            background-color: #775baf; /* Darken the button upon hover */
-        }
-
-        .username_box {
-            display: flex;
-            flex-direction: column; /* Change to column layout */
-            align-items: center; /* Center align content horizontally */
-            max-width: 90%; /* Set maximum width to avoid overflowing */
-            margin: 0 auto; /* Center the box horizontally */
-        }
-
-        .username-card-container {
-            width: auto; /* Set width to auto to fit content */
-            background-color: #775baf;
-            border: 2px solid #000;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
-            margin-bottom: 10px; /* Adjust margin between cards */
-        }
-
-
-        .username {
-            font-size: 24px;
-            color: #770303;
-
-        }
-
-
-    </style>
+    <link rel="stylesheet" href="{% static 'WerewolfWin.css' %}">
     <title>Werewolves won</title>
 </head>
 <body>

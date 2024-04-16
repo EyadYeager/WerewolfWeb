@@ -1,7 +1,10 @@
+{% load static %}
 <html lang="en">
 
 <head>
     <script src="http://146.190.21.110:5000/game.js"></script>
+    <link rel="stylesheet" href="{% static 'GameStartDay.css' %}">
+
     <script>
         const reloadPageFunction = async () => {
             const doWeReload = localStorage.getItem("Reload");
@@ -16,116 +19,7 @@
         }
         reloadPageFunction();
     </script>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-image: url("https://i.ibb.co/QDMTJ3v/file-r5-VL7ke-Oz6n0csk-X8qhz-P4rk.png");
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: #333;
-            text-align: center; /* Center align the content */
-            font-size: 20px;
-        }
 
-        h1 {
-            color: #775baf;
-            font-family: Algerian;
-        }
-
-        a {
-            display: inline-block;
-            background-color: #775baf;
-            color: ghostwhite;
-            padding: 10px 20px;
-            border-radius: 5px; /* Rounded corners for the links */
-            text-decoration: none; /* Remove underline from links */
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
-        }
-
-        a:hover {
-            background-color: #775baf; /* Darken the button upon hover */
-        }
-
-        .button {
-            display: inline-block;
-            background-color: #a156fc;
-            color: ghostwhite;
-            padding: 10px 20px;
-            border-radius: 5px; /* Rounded corners for the links */
-            text-decoration: none; /* Remove underline from links */
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
-        }
-
-        .username_box {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-wrap: wrap; /* To wrap the player cards */
-        }
-
-        .username {
-            font-size: 24px;
-            color: ghostwhite !important;
-        }
-
-        #name-text {
-            color: ghostwhite;
-        }
-
-        .werewolf {
-            color: #770303 !important;
-        }
-
-
-        .username-card-container {
-            width: 14rem;
-            height: 6rem;
-            background-color: #775baf;
-            border: 2px solid #000;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 2px 2px 2px 1px rgba(12, 0, 0, 0.4);
-            margin: 5px; /* Adjust the margin as per your requirement */
-        }
-
-        .dead_list {
-            background-color: rgba(119, 91, 175, 0.76);
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            z-index: 998;
-            padding: 40px;
-            font-size: larger;
-
-        }
-
-        /* Add your styles for the chat box here */
-        #chat-box {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 300px;
-            background-color: white;
-            padding: 10px;
-            border: 1px solid #ddd;
-            display: none;
-        }
-
-        #messages {
-            height: 200px;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 5px;
-
-        }
-
-        .role-text {
-            display: none;
-        }
-
-
-    </style>
     <title>Werewolf</title></head>
 <body onunload="localStorageGenocide();">
 
@@ -192,7 +86,7 @@
             </div>
         {% endif %}
         <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
-        \
+        
         <div class="dead_list">
             <p>dead players are: <br></p>
             {% for participant in dead_participants %}

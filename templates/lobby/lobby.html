@@ -1,6 +1,9 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="{% static 'lobby.css' %}">
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const readyButton = document.getElementById("Ready_Button");
@@ -72,80 +75,7 @@
         });
     </script>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            font-size: 16px;
-            background-color: #18544f;
-            margin: 20px;
-            padding: 20px;
-        }
 
-
-        h1 {
-            font-family: Algerian;
-        }
-
-        h1, p {
-            color: ghostwhite; /* A nice, soft blue */
-            text-align: center;
-        }
-
-        .container {
-            position: relative;
-            bottom: 155px;
-        }
-
-
-        a {
-            text-decoration: none;
-            padding: 5px 10px;
-            border: 1px solid transparent;
-            border-radius: 4px;
-            background-color: #775baf;
-            color: ghostwhite;
-            margin-right: 5px;
-        }
-
-        a:hover {
-            background-color: #6d4fa8; /* Darken button on hover for feedback */
-
-        }
-
-        ol {
-            background-color: #775baf;
-            padding: 20px;
-            border-radius: 5px;
-            list-style-type: decimal;
-            color: ghostwhite;
-        }
-
-        li {
-            margin-bottom: 10px;
-        }
-
-        .alert {
-            padding: 20px;
-            background-color: #f44336; /* Red */
-            color: ghostwhite;
-            margin-bottom: 15px;
-            border-radius: 4px;
-        }
-
-        @media (max-width: 600px) {
-            body {
-                margin: 5px;
-                padding: 5px;
-            }
-        }
-
-        .btn {
-            position: fixed;
-            bottom: 0;
-            right: 0;
-            z-index: 998;
-            padding: 40px;
-            font-size: larger;
-        }
     </style>
     <meta charset="UTF-8">
     <title>Lobby - {{ lobbyid.lobby_name }}</title>
