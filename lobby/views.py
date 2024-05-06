@@ -15,6 +15,7 @@ class SignUpView(generic.CreateView):
     template_name = "registration/signup.html"
 
 
+# specific room view
 class LobbyView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
@@ -34,6 +35,7 @@ class LobbyView(View):
                       {'lobbyid': lobbyid, "you": you, "participants_count": participants_count})
 
 
+# seeing all lobbies and choosing one
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
@@ -42,6 +44,7 @@ class MainLobbyView(View):
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
 
+# joining the lobby view
 class LobbyJoinView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -71,6 +74,7 @@ class LobbyJoinView(View):
                       {"lobbyid": lobbyid, "you": you, "participants_count": participants_count})
 
 
+# Leaving the lobby view
 class LobbyLeaveView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -88,6 +92,7 @@ class LobbyLeaveView(View):
         return render(request, 'lobby/lobby.html', {"lobbyid": lobbyid, "participants_count": participants_count})
 
 
+# Creating a lobby view
 class LobbyCreateView(View):
     def get(self, request):
         if not request.user.is_authenticated:
@@ -105,6 +110,7 @@ class LobbyCreateView(View):
         return redirect(f'/lobby/')
 
 
+# Game starting view
 class GameStart(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -169,6 +175,7 @@ class GameStart(View):
             participant.save()
 
 
+# View for the day part of the cycle
 class DayView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -279,6 +286,7 @@ class DayView(View):
         return render(request, 'lobby/alert.html', {"alert": alert, 'lobbyid': lobbyid})
 
 
+# Night view
 class NightView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -358,6 +366,7 @@ class NightView(View):
                        'lobbyid': lobbyid, "you": you, "dead_participants": dead_participants})
 
 
+# View if the werewolves win
 class WerewolvesView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -379,6 +388,7 @@ class WerewolvesView(View):
                        "lobbyid": lobbyid})
 
 
+# View of the Townspeople win
 class TownsPeopleView(View):
     def get(self, request, id):
         if not request.user.is_authenticated:
@@ -400,6 +410,7 @@ class TownsPeopleView(View):
                        "lobbyid": lobbyid})
 
 
+# Checking the cycle for the redirection in the html file
 class CheckCycleView(View):
     def get(self, request, id):
         lobby = Lobby.objects.get(lobbyId=id)
@@ -407,6 +418,7 @@ class CheckCycleView(View):
         return HttpResponse(lobby.game_cycle)
 
 
+# Checking if everyone is ready in the lobby to start game
 class CheckReadyView(View):
     def get(self, request, id):
         lobby = Lobby.objects.get(lobbyId=id)
@@ -414,6 +426,7 @@ class CheckReadyView(View):
         return HttpResponse(unready)
 
 
+# Check the players who haven't voted yet
 class CheckDayView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
@@ -424,8 +437,4 @@ class CheckDayView(View):
 
         return HttpResponse(listNotVoted)
 
-# class DeleteLobby(View):
-#     def get(self, request):
-#         LobbyDelete = GAME_STATUS(2)
-#         if LobbyDelete:
-#             LobbyDelete.delete()
+
