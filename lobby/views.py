@@ -19,7 +19,8 @@ class LobbyView(View):
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
-
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         try:
             lobbyid = Lobby.objects.get(lobbyId=id)
         except Lobby.DoesNotExist:
@@ -36,12 +37,15 @@ class LobbyView(View):
 class MainLobbyView(View):
     def get(self, request):
         lobbies = Lobby.objects.all()
-
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         return render(request, 'lobby/main.html', {'lobbies': lobbies})
 
 
 class LobbyJoinView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
 
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
@@ -69,6 +73,8 @@ class LobbyJoinView(View):
 
 class LobbyLeaveView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
         participants = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).all()
@@ -84,6 +90,9 @@ class LobbyLeaveView(View):
 
 class LobbyCreateView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
+
         return render(request, 'lobby/CreateLobby.html')
 
     def post(self, request):
@@ -98,6 +107,8 @@ class LobbyCreateView(View):
 
 class GameStart(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
         citizens = Participant.objects.filter(lobbyId=lobbyid, role=0)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
@@ -160,6 +171,8 @@ class GameStart(View):
 
 class DayView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
         you = Participant.objects.get(userId=request.user.id)
         dead_participants = Participant.objects.filter(lobbyId=lobbyid, dead=True)
@@ -268,6 +281,8 @@ class DayView(View):
 
 class NightView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         you = Participant.objects.get(userId=request.user.id)
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
@@ -345,6 +360,8 @@ class NightView(View):
 
 class WerewolvesView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
@@ -364,6 +381,8 @@ class WerewolvesView(View):
 
 class TownsPeopleView(View):
     def get(self, request, id):
+        if not request.user.is_authenticated:
+            return redirect('/signup/')
         lobbyid = Lobby.objects.get(lobbyId=id)
         werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, dead=False).count()
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
