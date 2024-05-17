@@ -18,22 +18,22 @@ class SignUpView(generic.CreateView):
 # specific room view
 class LobbyView(View):
     # Role distribution logic
-    def assign_roles(self, participants):
-        total_participants = participants.count()
-        werewolves_count = total_participants // 7 + 1  # Plus one for the initial werewolf
-        doctors_count = total_participants // 6 + 1  # Plus one for the initial doctor
-
-        werewolves_count = max(werewolves_count, 1)
-        doctors_count = max(doctors_count, 1)
-
-        citizens_count = total_participants - werewolves_count - doctors_count
-        roles = [1] * werewolves_count + [2] * doctors_count + [0] * citizens_count
-
-        random.shuffle(roles)
-
-        for participant, role in zip(participants.all(), roles):
-            participant.role = role
-            participant.save()
+    # def assign_roles(self, participants):
+    #     total_participants = participants.count()
+    #     werewolves_count = total_participants // 7 + 1  # Plus one for the initial werewolf
+    #     doctors_count = total_participants // 6 + 1  # Plus one for the initial doctor
+    #
+    #     werewolves_count = max(werewolves_count, 1)
+    #     doctors_count = max(doctors_count, 1)
+    #
+    #     citizens_count = total_participants - werewolves_count - doctors_count
+    #     roles = [1] * werewolves_count + [2] * doctors_count + [0] * citizens_count
+    #
+    #     random.shuffle(roles)
+    #
+    #     for participant, role in zip(participants.all(), roles):
+    #         participant.role = role
+    #         participant.save()
 
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
@@ -51,7 +51,7 @@ class LobbyView(View):
             you = Participant(lobbyId=lobbyid, userId=request.user)
             you.save()
         return render(request, 'lobby/lobby.html',
-                      {'lobbyid': lobbyid, "you": you, "participants_count": participants_count, 'assign_roles':self.assign_roles(participants)})
+                      {'lobbyid': lobbyid, "you": you, "participants_count": participants_count})
 
 
 # seeing all lobbies and choosing one
@@ -72,7 +72,7 @@ class LobbyJoinView(View):
 
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
-        print(participants_count)
+        # print(participants_count)
         try:
             if participant_check > 0:
                 alert = 4
@@ -152,6 +152,7 @@ class GameStart(View):
 
         lobbyid.game_cycle = 0
         lobbyid.save()
+
         if Participant.objects.filter(lobbyId=lobbyid, ready=False).count() == 0:
             for everyone in Participant.objects.filter(lobbyId=lobbyid):
                 everyone.vote_count = 0
@@ -159,9 +160,12 @@ class GameStart(View):
                 everyone.nightvoted = False
                 everyone.dead = False
                 everyone.save()
+            participants = Participant.objects.filter(lobbyId=lobbyid)
 
+            # this is for giving roles
             if lobbyid.game_status == 0:
                 lobbyid.game_status = 1
+                self.assign_roles(participants)
                 lobbyid.save()
 
                 return render(request, 'lobby/GameStartDay.html',
@@ -170,7 +174,22 @@ class GameStart(View):
 
         return render(request, 'lobby/lobby.html', {'lobbyid': lobbyid, "participants_count": participants_count})
 
+    def assign_roles(self, participants):
+        total_participants = participants.count()
+        werewolves_count = total_participants // 7 + 1  # Plus one for the initial werewolf
+        doctors_count = total_participants // 6 + 1  # Plus one for the initial doctor
 
+        werewolves_count = max(werewolves_count, 1)
+        doctors_count = max(doctors_count, 1)
+
+        citizens_count = total_participants - werewolves_count - doctors_count
+        roles = [1] * werewolves_count + [2] * doctors_count + [0] * citizens_count
+
+        random.shuffle(roles)
+
+        for participant, role in zip(participants.all(), roles):
+            participant.role = role
+            participant.save()
 
 
 # View for the day part of the cycle
@@ -374,6 +393,7 @@ class WerewolvesView(View):
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1, )
         lobbyid.game_status = 0
+        lobbyid.save()
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0
             everyone.dayvoted = False
@@ -396,6 +416,7 @@ class TownsPeopleView(View):
         townspeople = Participant.objects.filter(lobbyId=lobbyid, role__in=[0, 2]).count()
         List_werewolves = Participant.objects.filter(lobbyId=lobbyid, role=1)
         lobbyid.game_status = 0
+        lobbyid.save()
         for everyone in Participant.objects.filter(lobbyId=lobbyid):
             everyone.vote_count = 0
             everyone.dayvoted = False
@@ -419,9 +440,13 @@ class CheckCycleView(View):
 # Checking if everyone is ready in the lobby to start game
 class CheckReadyView(View):
     def get(self, request, id):
-        lobby = Lobby.objects.get(lobbyId=id)
-        unready = Participant.objects.filter(lobbyId=lobby, ready=False).count()
+        lobbyid = Lobby.objects.get(lobbyId=id)
+        participants = Participant.objects.filter(lobbyId=lobbyid)
+        unready = Participant.objects.filter(lobbyId=lobbyid, ready=False).count()
+
         return HttpResponse(unready)
+
+    # Role distribution logic
 
 
 # Check the players who haven't voted yet

@@ -5,7 +5,8 @@
     <link rel="stylesheet" href="{% static 'lobby.css' %}">
 
     <script>
-        
+
+
         document.addEventListener('DOMContentLoaded', () => {
             const readyButton = document.getElementById("Leave_Button");
 
@@ -93,7 +94,6 @@
         const unready = await response.text();
         if ({{ participants_count }} > 0) {
             if (unready == 0) {
-                {{ assign_roles }}
                 window.location.href = "/lobby/{{ lobbyid.lobbyId }}/gamestart/day"
             }
         }
