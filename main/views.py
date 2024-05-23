@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 
 
@@ -6,4 +6,6 @@ from django.views import View
 
 class MainView(View):
     def get(self, request):
+        if request.user.is_authenticated:
+            return redirect('/lobby/')
         return render(request, 'main/index.html')
