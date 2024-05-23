@@ -17,24 +17,6 @@ class SignUpView(generic.CreateView):
 
 # specific room view
 class LobbyView(View):
-    # Role distribution logic
-    # def assign_roles(self, participants):
-    #     total_participants = participants.count()
-    #     werewolves_count = total_participants // 7 + 1  # Plus one for the initial werewolf
-    #     doctors_count = total_participants // 6 + 1  # Plus one for the initial doctor
-    #
-    #     werewolves_count = max(werewolves_count, 1)
-    #     doctors_count = max(doctors_count, 1)
-    #
-    #     citizens_count = total_participants - werewolves_count - doctors_count
-    #     roles = [1] * werewolves_count + [2] * doctors_count + [0] * citizens_count
-    #
-    #     random.shuffle(roles)
-    #
-    #     for participant, role in zip(participants.all(), roles):
-    #         participant.role = role
-    #         participant.save()
-
     def get(self, request, id):
         lobbyid = Lobby.objects.get(lobbyId=id)
         participants = Participant.objects.filter(lobbyId=lobbyid)
