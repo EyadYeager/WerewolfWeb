@@ -194,11 +194,9 @@ class DayView(View):
                 everyone.rescued = 0
                 everyone.killed = 0
                 everyone.save()
-            # Participant.userId = request.user.id
+
             if "userid" in request.GET:
                 current_participant_id += int(request.GET['userid'])
-
-            # participant object (you)
 
             if "userid" in request.GET and not you.dayvoted:
 
@@ -414,8 +412,6 @@ class CheckReadyView(View):
         unready = Participant.objects.filter(lobbyId=lobbyid, ready=False).count()
 
         return HttpResponse(unready)
-
-    # Role distribution logic
 
 
 # Check the players who haven't voted yet
