@@ -240,16 +240,6 @@ class DayView(View):
                     voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
                                                                     vote_count=maxcount['vote_count__max'])
                     soon_to_be_dead_participant = voted_participants
-                    # # checks if there is only one participant with the most votes
-                    #
-                    # if voted_participants.count() > 0:
-                    #     soon_to_be_dead_participant = random.choice(voted_participants)
-                    #     soon_to_be_dead_participant.dead = True
-                    #     soon_to_be_dead_participant.save()
-                    # else:
-                    #     print(voted_participants.count())
-                    #     print("everyone's votes are equal")
-                    #     soon_to_be_dead_participant = voted_participants
 
                     if werewolves < 1:
                         lobbyid.game_cycle = 2
