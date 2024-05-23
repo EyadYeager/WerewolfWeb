@@ -54,7 +54,6 @@ class LobbyJoinView(View):
 
         participant_check = Participant.objects.filter(userId=request.user.id).exclude(lobbyId__game_status=2).count()
         participants_count = Participant.objects.filter(lobbyId=lobbyid).count()
-        # print(participants_count)
         try:
             if participant_check > 0:
                 alert = 4
@@ -218,12 +217,10 @@ class DayView(View):
                 # check if everyone voted
                 if Participant.objects.filter(lobbyId=lobbyid, dayvoted=False, dead=False).count() == 0:
                     maxcount = Participant.objects.filter(lobbyId=lobbyid, dead=False).aggregate(Max("vote_count"))
-                    print(f"Max vote count is: {maxcount['vote_count__max']}")
 
                     # After ensuring all votes are cast
                     voted_participants = Participant.objects.filter(lobbyId=lobbyid, dead=False,
                                                                     vote_count=maxcount['vote_count__max'])
-                    print(f"Number of participants with max votes: {voted_participants.count()}")
 
                     if voted_participants.count() == 1:
                         # If there's a clear participant with the highest votes
