@@ -1,27 +1,13 @@
 {% load static %}
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <script src="http://146.190.21.110:5000/game.js"></script>
     <link rel="stylesheet" href="{% static 'GameStartDay.css' %}">
 
-    <script>
-        const reloadPageFunction = async () => {
-            const doWeReload = localStorage.getItem("Reload");
-            if (doWeReload !== 'Nah') {
-                await localStorage.setItem("Reload", "Nah");
-                location.reload();
-
-            }
-        }
-        const localStorageGenocide = () => {
-            localStorage.removeItem("Reload")
-        }
-        reloadPageFunction();
-    </script>
 
     <title>Werewolf</title></head>
-<body onunload="localStorageGenocide();">
 
 <a href="/lobby/{{ lobbyid.lobbyId }}">Go back to lobby</a>
 
@@ -116,9 +102,8 @@
                 const response = await fetch(`/lobby/` + lobby_id + `/gamestart/daycheck/`);
                 const didNotVote = await response.text();
                 const hi = await document.getElementById('hi')
-                console.log(hi)
                 hi.innerHTML = `<br> <h3> People who haven't voted </h3> <p> ${didNotVote}</p>`
-            }, 2000)
+            }, 3000)
 
         </script>
         <div class="players-footer">
