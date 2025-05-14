@@ -3,7 +3,6 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="{% static 'lobby.css' %}">
-
     <script>
 
 
@@ -12,7 +11,7 @@
 
             readyButton.addEventListener("click", (event) => {
                 event.preventDefault(); // Prevent the default link action
-                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/BYE-BYE.mp3");
+                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/WerewolfOfWeb_sfx/main/BYE-BYE.mp3");
 
                 audio.play().then(() => {
                     console.log("Audio playback started successfully.");
@@ -35,7 +34,7 @@
 
             readyButton.addEventListener("click", (event) => {
                 event.preventDefault(); // Prevent the default link action
-                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/MafiaBot-Real/main/Wellcome.mp3");
+                const audio = new Audio("https://raw.githubusercontent.com/EyadYeager/WerewolfOfWeb_sfx/main/Wellcome.mp3");
 
                 audio.play().then(() => {
                     console.log("Audio playback started successfully.");
